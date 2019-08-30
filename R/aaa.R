@@ -235,13 +235,30 @@ bestSinks = function(pp, ms, po, pps, ppss, bps, mydata){
 
     sinks.tmp1 = list()
 
+    ws <- numeric(nrow(sinks.tmp))
     for(j in 1:nrow(sinks.tmp)){
+      ws[j] = length(subsetur(m, sinks.tmp[j, "windx"]))
+    }
+
+    total_length <- sum(ws)
+    wscore <- windx <- k <- sink <- numeric(m*m) #find better upper bound
+
+    index <- 1
+    for(j in seq_len(nrow(sinks.tmp))) {
       w = subsetur(m, sinks.tmp[j, "windx"])
       w.networkscore = sinks.tmp[j, "wscore"]
       w1sinks = wsink.scores(w, w.networkscore, pp, po, pps, bps, m)
-      sinks.tmp1[[j]] = as.data.frame(w1sinks)
+      index_subset <- seq_along(w1sinks$wscore)-1+index
+      wscore[index_subset] <- w1sinks$wscore
+      windx[index_subset] <- w1sinks$windx
+      k[index_subset] <- w1sinks$k
+      sink[index_subset] <- w1sinks$sink
+      index <- index + length(index_subset)
     }
-    sinks.tmp1 <- do.call(rbind, sinks.tmp1)
+    sinks.tmp1  <- data.frame(wscore = wscore[seq_len(index-1)],
+                              windx = windx[seq_len(index-1)],
+                              k = k[seq_len(index-1)],
+                              sink = sink[seq_len(index-1)])
 
     # break k loop if there are no more offspring for any sets
     if( nrow(sinks.tmp1) == 0 ) break
