@@ -1,9 +1,9 @@
 # Compute index r for some set T, which is a subset of a set with n elements
 # watch out for rounding errors!!!
 subsetr = function(n, T){
-  r = 0
-  for(i in 1:n){
-    if( is.element(i, T)) r = r + 2^(n-i)
+  r = 0L
+  for(i in seq_len(n)){
+    if( is.element(i, T)) r = r + 2L ^ (n - i)
   }
   return(r)
 }
@@ -181,28 +181,34 @@ swscore = function(s, w, pp, pps, bps){
 #   where v is a possible offspring of at least one of the nodes in w.
 # W.networkscore is the score of the best network for w.
 wsink.scores = function(w, w.networkscore, pp, po, pps, bps, m){
-  nms = c("windx", "k", "sink", "wscore")
-  w1sinks = as.data.frame(matrix(NA, nrow=0, ncol=length(nms)))
-  names(w1sinks) = nms
 
   # Find possible offspring for w not already in w
   wpo = NULL
   for(v in w){
     wpo = unique( c(wpo, po[[v]][ !is.element( po[[v]], w ) ]) )
   }
+
   if( length(wpo) > 0 ){
+    windx <- k <- sink <- wscore <- numeric(length(wpo))
     # Expand w by one po node, a possible sink, and compute score
     rowno = 1
     for(s in wpo){
       s.score = swscore(s, w, pp, pps, bps)[[2]]
-      w1sinks[rowno, "wscore"] = s.score + w.networkscore
-      w1sinks[rowno, "windx"] = subsetr(m, c(w, s))
-      w1sinks[rowno, "k"] = length(w) + 1
-      w1sinks[rowno, "sink"] = s
+      wscore[rowno] = s.score + w.networkscore
+      windx[rowno] = subsetr(m, c(w, s))
+      k[rowno] = length(w) + 1
+      sink[rowno] = s
       rowno = rowno + 1
     }
-  } else w1sinks = NULL    # end if length(wpo)
+  } else {
+    w1sinks = NULL    # end if length(wpo)
+    return( w1sinks )
+  }
 
+  w1sinks <- list(wscore = wscore,
+                  windx = windx,
+                  k = k,
+                  sink = sink)
   return( w1sinks )
 } # end wsink.scores
 # w1sinks is a dataframe in including w1 indices, sink names, and w1 scores
@@ -222,17 +228,20 @@ bestSinks = function(pp, ms, po, pps, ppss, bps, mydata){
     sinks.tmp[s, "wscore"] = ms[s]
   }
   mysinks = sinks.tmp
-  bsinks = sinks.tmp[ 0, ]
+  bsinks = sinks.tmp[0, ]
 
   # best sinks and scores for subnetworks of size 2:m
   for(k in 2:m){
-    sinks.tmp1 = sinks.tmp[ 0, ]
+
+    sinks.tmp1 = list()
+
     for(j in 1:nrow(sinks.tmp)){
       w = subsetur(m, sinks.tmp[j, "windx"])
       w.networkscore = sinks.tmp[j, "wscore"]
       w1sinks = wsink.scores(w, w.networkscore, pp, po, pps, bps, m)
-      sinks.tmp1 = rbind(sinks.tmp1, w1sinks)
+      sinks.tmp1[[j]] = as.data.frame(w1sinks)
     }
+    sinks.tmp1 <- do.call(rbind, sinks.tmp1)
 
     # break k loop if there are no more offspring for any sets
     if( nrow(sinks.tmp1) == 0 ) break
@@ -244,8 +253,8 @@ bestSinks = function(pp, ms, po, pps, ppss, bps, mydata){
       tmp = sinks.tmp1[ is.element( sinks.tmp1$windx, myw ), ]
       tmp1 = tmp[ tmp$wscore >= max(tmp$wscore), ]
       bsinks = rbind( bsinks, tmp1 )
-      bsinks = bsinks[ !duplicated(bsinks), ]
     }
+    bsinks = unique(bsinks)
     sinks.tmp = bsinks[ is.element( bsinks$k, k ), ]
   }
 

@@ -33,6 +33,7 @@ install.packages("silander")
 library(silander)
 source("~/Documents/USC/P3/optimal-solution/baseline.R")
 # simulate data
+set.seed(1234)
 mydata = simdat(n.var = 15)
 
 # silander results
