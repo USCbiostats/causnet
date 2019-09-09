@@ -1,14 +1,22 @@
-Package: silander
+Package: causnet
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "Emil",
-           family = "Hvitfeldt",
-           role = c("aut", "cre"),
-           email = "emilhhvitfeldt@gmail.com",
-           comment = c(ORCID = "0000-0002-0679-1945"))
+Authors@R: c(
+ person(
+    given = "Joshua", 
+    family = "Millstein", 
+    role = "aut",
+    email = "joshua.millstein@usc.edu"),
+  person(
+    given = "Emil",
+    family = "Hvitfeldt",
+    role = c("aut", "cre"),
+    email = "emilhhvitfeldt@gmail.com",
+    comment = c(ORCID = "0000-0002-0679-1945")))
 Description: What the package does (one paragraph).
-License: MIT + file LICENSE
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Suggests: 
+    igraph

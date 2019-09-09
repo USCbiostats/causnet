@@ -2,8 +2,11 @@
 #'
 #' @param sample.size integer, number of observations
 #' @param n.var integer, number of variables
+#' @param beta numeric, amount of correlation
 #'
 #' The dependencies will be created in the fashion: 1 -> 2 -> 3 -> 4 -> 5
+#'
+#' @importFrom stats rnorm
 #'
 #' @return data.frame
 #' @export

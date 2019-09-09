@@ -9,7 +9,9 @@ simdat(sample.size = 300, n.var = 5, beta = 0.3)
 \arguments{
 \item{sample.size}{integer, number of observations}
 
-\item{n.var}{integer, number of variables
+\item{n.var}{integer, number of variables}
+
+\item{beta}{numeric, amount of correlation
 
 The dependencies will be created in the fashion: 1 -> 2 -> 3 -> 4 -> 5}
 }

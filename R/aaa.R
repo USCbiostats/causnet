@@ -19,7 +19,10 @@ subsetur = function(n, r){
   return( T )
 }
 
+
 # function to find possible parents
+
+#' @importFrom stats cor.test
 mypp = function(mydata, alpha, n.var){
   pp = vector('list', n.var)
   for(v in 1:n.var){
@@ -45,6 +48,8 @@ pofun = function(pp){
 }
 
 # create list object with all combinations of vec
+
+#' @importFrom utils combn
 comb1 = function(vec) {
   n = length(vec)
   out = vector('list', n)
@@ -65,10 +70,12 @@ pp.sets = function(pp){
 }
 
 # Bigger is better score for node y and parents x
+
+#' @importFrom stats BIC lm
 score.bic.lm = function(y, x, mydat) {
   y.nm = colnames(mydat)[ y ]
   if( is.element(x[1], 1:ncol(mydat)) ) x.nms = colnames(mydat)[ x ] else x.nms = "1"
-  fit = lm(paste0(y.nm, ' ~ ', paste(x.nms, collapse=' + ')), dat=mydat)
+  fit = lm(paste0(y.nm, ' ~ ', paste(x.nms, collapse=' + ')), data = mydat)
   bic = -(1/2)*BIC(fit)
   return(bic)
 }
