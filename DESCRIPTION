@@ -20,3 +20,5 @@ LazyData: true
 RoxygenNote: 6.1.1
 Suggests: 
     igraph
+URL: https://github.com/USCbiostats/causnet
+BugReports: https://github.com/USCbiostats/causnet/issues
