@@ -15,7 +15,7 @@ You can install the development version from GitHub with:
 
 ``` r
 require("devtools")
-install_github("USCbiostats/v")
+install_github("USCbiostats/causnet")
 ```
 
 \~You can install the released version of causnet from
