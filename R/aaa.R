@@ -238,7 +238,7 @@ bestSinks = function(pp, ms, po, pps, ppss, bps, mydata){
   bsinks = sinks.tmp[0, ]
 
   # best sinks and scores for subnetworks of size 2:m
-  for(k in 2:m){
+  for(kk in 2:m){
 
     sinks.tmp1 = list()
 
@@ -279,7 +279,7 @@ bestSinks = function(pp, ms, po, pps, ppss, bps, mydata){
       bsinks = rbind( bsinks, tmp1 )
     }
     bsinks = unique(bsinks)
-    sinks.tmp = bsinks[ is.element( bsinks$k, k ), ]
+    sinks.tmp = bsinks[ is.element( bsinks$k, kk ), ]
   }
 
   return(bsinks)
