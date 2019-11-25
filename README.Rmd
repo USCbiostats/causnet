@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 # causnet
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/USCbiostats/causnet.svg?branch=master)](https://travis-ci.org/USCbiostats/causnet)
+[![Codecov test coverage](https://codecov.io/gh/USCbiostats/causnet/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/causnet?branch=master)
 <!-- badges: end -->
 
 The goal of causnet is to ...
@@ -26,7 +28,7 @@ You can install the development version from GitHub with:
 
 ```{r installation, eval=FALSE}
 require("devtools")
-install_github("USCbiostats/v")
+install_github("USCbiostats/causnet")
 ```
 
 

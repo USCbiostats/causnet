@@ -5,6 +5,10 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/USCbiostats/causnet.svg?branch=master)](https://travis-ci.org/USCbiostats/causnet)
+[![Codecov test
+coverage](https://codecov.io/gh/USCbiostats/causnet/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/causnet?branch=master)
 <!-- badges: end -->
 
 The goal of causnet is to …
@@ -41,19 +45,10 @@ links.s
 #>   from to component
 #> 1    4  5         1
 #> 2    3  4         1
-#> 3    2  3         1
-#> 4    1  2         1
+#> 3    2  1         1
+#> 4    2  3         1
 
 netplot_jm(links.s)
-#> Loading required package: igraph
-#> 
-#> Attaching package: 'igraph'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     decompose, spectrum
-#> The following object is masked from 'package:base':
-#> 
-#>     union
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />

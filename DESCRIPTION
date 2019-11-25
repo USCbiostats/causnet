@@ -20,7 +20,8 @@ LazyData: true
 RoxygenNote: 7.0.1.9000
 Suggests: 
     igraph,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    covr
 URL: https://github.com/USCbiostats/causnet
 BugReports: https://github.com/USCbiostats/causnet/issues
 LinkingTo: 
