@@ -5,12 +5,12 @@
 \title{Compute index r for some set T, which is a subset of a set with n elements
 watch out for rounding errors!!!}
 \usage{
-subsetr(n, T)
+subsetr(n, set)
 }
 \arguments{
 \item{n}{numeric}
 
-\item{T}{set of elements}
+\item{set}{set of elements}
 }
 \description{
 Compute index r for some set T, which is a subset of a set with n elements

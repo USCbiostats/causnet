@@ -4,7 +4,7 @@
 \alias{mypp}
 \title{function to find possible parents}
 \usage{
-mypp(mydata, alpha, n.var)
+mypp(mydata, alpha, n_var)
 }
 \description{
 function to find possible parents

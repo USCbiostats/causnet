@@ -13,7 +13,7 @@ double getIndex (int m,const std::vector<double> & T)
 {
   Rcpp::Environment base("package:causnet");
   Rcpp::Function f = base["subsetr"];
-  return as<double>(f(Named("n")=m, Named("T")=T));
+  return as<double>(f(Named("n")=m, Named("set")=T));
 }
 
 std::vector<int> getSubsetFromIndex (int n,int r)
@@ -33,7 +33,7 @@ Rcpp::List getwsinkscores(std::vector<int> w,
                           int m)
 {
   Rcpp::Environment base("package:causnet");
-  Rcpp::Function f = base["wsink.scores"];
+  Rcpp::Function f = base["wsink_scores"];
   Rcpp::List v = (f(w, w_networkscore, pp, po, pps, bps, m));
   return v;
 }
@@ -204,4 +204,3 @@ List bestSinksCnew(Rcpp::List  & pp,   Rcpp::List & ms,
 
   return bsinks1;
 }
-//end bestSinks
