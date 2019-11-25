@@ -12,9 +12,8 @@ sfun = function(mydata){
   pps = pp.sets(pp) # all sets of possible parents
   ppss = pp.sets.s(mydata, pps) # scores for all sets of possible parents for each node
   bps = pp.sets.bs(pps, ppss, ms) # BEST parent sets and scores for all sets of possible parents for each node
-
-  bsinks = bestSinks(pp, ms, po, pps, ppss, bps, mydata) # best sinks for all possible connected components
-  bnets = bestnet(bsinks, n.var) # ordered best sinks for labeled connected components
+  bsinksc = bestSinksCnew(pp, ms, po, pps, ppss, bps, mydata) # best sinks for all possible connected components
+  bnets = bestnet(bsinksc, n.var) # ordered best sinks for labeled connected components
   mylinks = sink2net(bnets, pp, pps, bps) # network edges and labeled connected components
   names(mylinks)[1:2] = c("from", "to")
   return(mylinks)
