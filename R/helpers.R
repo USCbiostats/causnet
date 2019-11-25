@@ -2,14 +2,14 @@
 #' watch out for rounding errors!!!
 #'
 #' @param n numeric
-#' @param T set of elements
+#' @param set set of elements
 #'
 #' @keywords internal
 #' @export
-subsetr = function(n, T){
-  r = 0L
-  for(i in seq_len(n)){
-    if(is.element(i, T)) r = r + 2L ^ (n - i)
+subsetr <- function(n, set) {
+  r <- 0L
+  for (i in seq_len(n)) {
+    if (is.element(i, set)) r <- r + 2L ^ (n - i)
   }
   return(r)
 }
@@ -22,11 +22,11 @@ subsetr = function(n, T){
 #'
 #' @keywords internal
 #' @export
-subsetur = function(n, r){
-  T = integer()
-  for(i in n:1){
-    if( (r %% 2) == 1 ) T = c(i,T)
-    r = r %/% 2
+subsetur <- function(n, r) {
+  set <- integer()
+  for (i in n:1) {
+    if ((r %% 2) == 1) set <- c(i, set)
+    r <- r %/% 2
   }
-  return( T )
+  return(set)
 }

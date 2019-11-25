@@ -1,48 +1,55 @@
 #' function to find possible parents
 #' @keywords internal
 #' @importFrom stats cor.test
-mypp = function(mydata, alpha, n.var){
-  pp = vector('list', n.var)
-  for(v in 1:n.var){
-    for(p in 1:n.var){
-      if(p != v){
-        p.value = cor.test(mydata[, v], mydata[, p])$p.value
-        if(p.value < alpha) pp[[v]] = c(pp[[v]], p)
+mypp <- function(mydata, alpha, n_var) {
+  pp <- vector("list", n_var)
+  for (v in 1:n_var) {
+    for (p in 1:n_var) {
+      if (p != v) {
+        p_value <- cor.test(mydata[, v], mydata[, p])$p.value
+        if (p_value < alpha) pp[[v]] <- c(pp[[v]], p)
       }
     }
   }
   return(pp)
 } # end mypp
 
-# function to reformat a list of possible parents, pp, into a list of possible offspring, po
-pofun = function(pp){
-  po = vector('list', length(pp))
-  for(i in 1:length(pp)){
-    for(j in 1:length(pp)){
-      if( is.element(i, pp[[ j ]]) ) po[[i]] = c( po[[i]], j )
+# function to reformat a list of possible parents, pp, into a list of possible
+# offspring, po
+pofun <- function(pp) {
+  po <- vector("list", length(pp))
+  for (i in seq_along(pp)) {
+    for (j in seq_along(pp)) {
+      if (is.element(i, pp[[j]])) {
+        po[[i]] <- c(po[[i]], j)
+      }
     }
   }
-  return( po )
+  return(po)
 }
 
 #' create list object with all combinations of vec
 #' @keywords internal
 #' @importFrom utils combn
-comb1 = function(vec) {
-  n = length(vec)
-  out = vector('list', n)
+comb1 <- function(vec) {
+  n <- length(vec)
+  out <- vector("list", n)
   for (j in 1:n) {
-    if( length(vec) > 1 ) out[[ j ]] = combn(vec, j) else out[[ j ]] = matrix(vec, nrow=1, ncol=1)
+    if (length(vec) > 1) {
+      out[[j]] <- combn(vec, j)
+    } else {
+      out[[j]] <- matrix(vec, nrow = 1, ncol = 1)
+    }
   }
   return(out)
 }
 
 ## create all sets of possible parents for each node
-pp.sets = function(pp){
-  n = length(pp)
-  pps = vector('list', n)
-  for(j in 1:n){
-    pps[[ j ]] = comb1( pp[[ j ]] )
+pp_sets <- function(pp) {
+  n <- length(pp)
+  pps <- vector("list", n)
+  for (j in 1:n) {
+    pps[[j]] <- comb1(pp[[j]])
   }
   return(pps)
 }
@@ -50,29 +57,33 @@ pp.sets = function(pp){
 #' Bigger is better score for node y and parents x
 #' @keywords internal
 #' @importFrom stats BIC lm
-score.bic.lm = function(y, x, mydat) {
-  y.nm = colnames(mydat)[ y ]
-  if( is.element(x[1], 1:ncol(mydat)) ) x.nms = colnames(mydat)[ x ] else x.nms = "1"
-  fit = lm(paste0(y.nm, ' ~ ', paste(x.nms, collapse=' + ')), data = mydat)
-  bic = -(1/2)*BIC(fit)
+score_bic_lm <- function(y, x, mydat) {
+  y_nm <- colnames(mydat)[y]
+  if (is.element(x[1], seq_len(ncol(mydat)))) {
+    x_nms <- colnames(mydat)[x]
+  } else {
+    x_nms <- "1"
+  }
+  fit <- lm(paste0(y_nm, " ~ ", paste(x_nms, collapse = " + ")), data = mydat)
+  bic <- - (1 / 2) * BIC(fit)
   return(bic)
 }
 
 ## create object with scores for all sets of possible parents for each node
-pp.sets.s = function(mydata, pps){
-  n = length(pps)
-  ppss = vector('list', n) # possible parent set scores
-  ppss1 = vector('list', n) # possible parent best sets
-  ppss2 = vector('list', n) # possible parent best set scores
-  for(v in 1:n){
-    n.pp = ncol(pps[[v]][[1]])
-    for(set.size in 1:n.pp){
-      ppss[[v]][[set.size]] = rep(NA, ncol(pps[[v]][[set.size]]) )
-      ppss1[[v]][[set.size]] = rep(NA, ncol(pps[[v]][[set.size]]) )
-      ppss2[[v]][[set.size]] = rep(NA, ncol(pps[[v]][[set.size]]) )
-      for(pset.i in 1:ncol(pps[[v]][[set.size]])){
-        v.pset = pps[[v]][[set.size]][ , pset.i ]
-        ppss[[v]][[set.size]][ pset.i ] = score.bic.lm( v, v.pset, mydata )
+pp_sets_s <- function(mydata, pps) {
+  n <- length(pps)
+  ppss <- vector("list", n) # possible parent set scores
+  ppss1 <- vector("list", n) # possible parent best sets
+  ppss2 <- vector("list", n) # possible parent best set scores
+  for (v in 1:n) {
+    n_pp <- ncol(pps[[v]][[1]])
+    for (set.size in seq_len(n_pp)) {
+      ppss[[v]][[set.size]] <- rep(NA, ncol(pps[[v]][[set.size]]))
+      ppss1[[v]][[set.size]] <- rep(NA, ncol(pps[[v]][[set.size]]))
+      ppss2[[v]][[set.size]] <- rep(NA, ncol(pps[[v]][[set.size]]))
+      for (pset.i in seq_len(ncol(pps[[v]][[set.size]]))) {
+        v_pset <- pps[[v]][[set.size]][, pset.i]
+        ppss[[v]][[set.size]][pset.i] <- score_bic_lm(v, v_pset, mydata)
       }
     }
   }
@@ -80,203 +91,206 @@ pp.sets.s = function(mydata, pps){
 }
 
 # compute scores for nodes with no parents
-mscores = function(vset, mydata){
-  mscore = NULL
-  for(v in vset){
-    mscore = c(mscore, score.bic.lm( v, NA, mydata ))
+mscores <- function(vset, mydata) {
+  mscore <- NULL
+  for (v in vset) {
+    mscore <- c(mscore, score_bic_lm(v, NA, mydata))
   }
   return(mscore)
 }
 
 # get a score, given a node, its parent set, and parent set scores
 # ms = scores of nodes w/ no parents
-get.score = function(v, pset, pps, ppss, ms){
-  if(length(pset) < 1){
-    myscore = ms[v]
+get.score <- function(v, pset, pps, ppss, ms) {
+  if (length(pset) < 1) {
+    myscore <- ms[v]
   } else {
-    l = length(pset)
-    aa = apply(pps[[v]][[l]],2,setequal,y=pset)
-    myscore = ppss[[v]][[l]][ aa ]
+    l <- length(pset)
+    aa <- apply(pps[[v]][[l]], 2, setequal, y = pset)
+    myscore <- ppss[[v]][[l]][aa]
   }
   return(myscore)
 } # end get.score
 
-# function to find best parent set of s, for parent set pset, given pps, ppss, ms
-bestps = function(v, pset, pps, ppss, ms){
+# function to find best parent set of s, for parent set pset, given pps, ppss,
+# ms
+bestps <- function(v, pset, pps, ppss, ms) {
   # all subsets of pset
-  best.score = get.score(v, NULL, pps, ppss, ms)
-  best.set = NULL
-  sb = comb1( pset )
-  for(j in 1:length(sb)){
-    for(k in 1:ncol(sb[[j]])){
-      tmp.set = sb[[j]][, k]
-      tmp.score = get.score(v, tmp.set, pps, ppss, ms)
-      if( tmp.score > best.score ){
-        best.set = tmp.set
-        best.score  = tmp.score
+  best_score <- get.score(v, NULL, pps, ppss, ms)
+  best_set <- NULL
+  sb <- comb1(pset)
+  for (j in seq_along(sb)) {
+    for (k in seq_len(ncol(sb[[j]]))) {
+      tmp_set <- sb[[j]][, k]
+      tmp_score <- get.score(v, tmp_set, pps, ppss, ms)
+      if (tmp_score > best_score) {
+        best_set <- tmp_set
+        best_score <- tmp_score
       }
     }
   }
-  outp = vector('list', 2)
-  outp[[1]] = best.set
-  outp[[2]] = best.score
+  outp <- vector("list", 2)
+  outp[[1]] <- best_set
+  outp[[2]] <- best_score
   return(outp)
 } # end function bestps
 
 # Get BEST parent sets and scores for all sets of possible parents for each node
-pp.sets.bs = function(pps, ppss, ms){
-  bps = ppss # best parent sets
-  bpss = ppss # best parent set scores
-  for(v in 1:length(pps)){
-    # for each possible parent set, compare score w/ all subsets to identify the best possible parent sets
-    n.pp = ncol(pps[[v]][[1]])
-    for(set.size in 1:n.pp){
-      n.sets = ncol(pps[[v]][[set.size]])
-      bps[[v]][[set.size]] = vector('list', n.sets)
-      for(k in 1:n.sets){
-        tmp.set = pps[[v]][[set.size]][, k]
-        tmp = bestps(v, tmp.set, pps, ppss, ms)
-        bps[[v]][[set.size]][[k]] = tmp[[1]]
-        bpss[[v]][[set.size]][k] = tmp[[2]]
+pp_sets_bs <- function(pps, ppss, ms) {
+  bps <- ppss # best parent sets
+  bpss <- ppss # best parent set scores
+  for (v in seq_along(pps)) {
+    # for each possible parent set, compare score w/ all subsets to identify the
+    # best possible parent sets
+    n_pp <- ncol(pps[[v]][[1]])
+    for (set.size in seq_len(n_pp)) {
+      n_sets <- ncol(pps[[v]][[set.size]])
+      bps[[v]][[set.size]] <- vector("list", n_sets)
+      for (k in seq_len(n_sets)) {
+        tmp_set <- pps[[v]][[set.size]][, k]
+        tmp <- bestps(v, tmp_set, pps, ppss, ms)
+        bps[[v]][[set.size]][[k]] <- tmp[[1]]
+        bpss[[v]][[set.size]][k] <- tmp[[2]]
       }
     }
   }
-  outp = vector('list', 2)
-  outp[[ 1 ]] = bps
-  outp[[ 2 ]] = bpss
-  return( outp )
-} # end function pp.sets.bs
+  outp <- vector("list", 2)
+  outp[[1]] <- bps
+  outp[[2]] <- bpss
+  return(outp)
+} # end function pp_sets_bs
 
-#' given a node s, and a set w, compute score for s with its best parent set in w
-#' argument bps is generated by pp.sets.bs
+#' given a node s, and a set w, compute score for s with its best parent set in
+#' w argument bps is generated by pp_sets_bs
 #' @keywords internal
 #' @export
-swscore = function(s, w, pp, pps, bps){
+swscore <- function(s, w, pp, pps, bps) {
   # find possible parents of s in w
-  pset = w[ is.element( w, pp[[s]] ) ]
-  l = length(pset)
-  aa = apply(pps[[s]][[l]],2,setequal,y=pset)
-  best.ps = bps[[1]][[s]][[l]][aa]
-  best.pss = bps[[2]][[s]][[l]][aa]
-  outp = vector('list', 2)
-  outp[[ 1 ]] = best.ps
-  outp[[ 2 ]] = best.pss
-  return(outp)
+  pset <- w[is.element(w, pp[[s]])]
+  l <- length(pset)
+  aa <- apply(pps[[s]][[l]], 2, setequal, y = pset)
+
+  out <- vector("list", 2)
+  out[[1]] <- bps[[1]][[s]][[l]][aa]
+  out[[2]] <- bps[[2]][[s]][[l]][aa]
+  return(out)
 } # end swscore
 
-#' Given a set w of nodes, compute network scores for all possible sinks of sets, w1 = {w union v},
-#'   where v is a possible offspring of at least one of the nodes in w.
-#' W.networkscore is the score of the best network for w.
+#' Given a set w of nodes, compute network scores for all possible sinks of
+#' sets, w1 = {w union v}, where v is a possible offspring of at least one of
+#' the nodes in w. w_networkscore is the score of the best network for w.
 #' @keywords internal
 #' @export
-wsink.scores = function(w, w.networkscore, pp, po, pps, bps, m){
+wsink_scores <- function(w, w_networkscore, pp, po, pps, bps, m) {
 
   # Find possible offspring for w not already in w
-  #wpo = NULL
-  wpo = integer()
-  for(v in w){
-    wpo = unique( c(wpo, po[[v]][ !is.element( po[[v]], w ) ]) )
+  wpo <- integer()
+  for (v in w) {
+    wpo <- unique(c(wpo, po[[v]][!is.element(po[[v]], w)]))
   }
 
-  if( length(wpo) > 0 ){
+  if (length(wpo) > 0) {
     windx <- k <- sink <- wscore <- numeric(length(wpo))
     # Expand w by one po node, a possible sink, and compute score
-    rowno = 1
-    for(s in wpo){
-      s.score = swscore(s, w, pp, pps, bps)[[2]]
-      wscore[rowno] = s.score + w.networkscore
-      windx[rowno] = subsetr(m, c(w, s))
-      k[rowno] = length(w) + 1
-      sink[rowno] = s
-      rowno = rowno + 1
+    rowno <- 1
+    for (s in wpo) {
+      s_score <- swscore(s, w, pp, pps, bps)[[2]]
+      wscore[rowno] <- s_score + w_networkscore
+      windx[rowno] <- subsetr(m, c(w, s))
+      k[rowno] <- length(w) + 1
+      sink[rowno] <- s
+      rowno <- rowno + 1
     }
   } else {
-    #w1sinks = NULL    # end if length(wpo)
-    w1sinks = list(wscore = integer(),
-                   windx = integer(),
-                   k = integer(),
-                   sink = integer())
-    return( w1sinks )
+    w1sinks <- list(
+      wscore = integer(),
+      windx = integer(),
+      k = integer(),
+      sink = integer()
+    )
+    return(w1sinks)
   }
 
-  w1sinks <- list(wscore = wscore,
-                  windx = windx,
-                  k = k,
-                  sink = sink)
-  return( w1sinks )
-} # end wsink.scores
+  w1sinks <- list(
+    wscore = wscore,
+    windx = windx,
+    k = k,
+    sink = sink
+  )
+  return(w1sinks)
+}
 # w1sinks is a dataframe in including w1 indices, sink names, and w1 scores
 
-bestnet = function(bsinks, m){
-  nms = c("windx", "k", "sink", "component")
-  bestnets = as.data.frame(matrix(NA, nrow=0, ncol=length(nms)))
-  names(bestnets) = nms
+bestnet <- function(bsinks, m) {
+  nms <- c("windx", "k", "sink", "component")
+  bestnets <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
+  names(bestnets) <- nms
 
   ## Order best sinks, removing a sink at each step
   # Loop over connected components
-  mycomp = 1
-  rowno = 1
-  while(nrow(bsinks) > 0){
+  mycomp <- 1
+  rowno <- 1
+  while (nrow(bsinks) > 0) {
+    ks <- unique(bsinks$k)
+    ks <- ks[order(ks, decreasing = TRUE)]
+    k <- max(ks)
+    aa <- match(k, bsinks$k)
+    tmp_s <- bsinks[aa, ]
+    bestnets[rowno, nms[1:3]] <- tmp_s[1, nms[1:3]]
+    bestnets[rowno, "component"] <- mycomp
+    myw <- subsetur(m, tmp_s[1, "windx"])
+    w1 <- myw[!is.element(myw, tmp_s[1, "sink"])]
+    w1indx <- subsetr(m, w1)
 
-    ks = unique( bsinks$k )
-    ks = ks[order(ks, decreasing=TRUE)]
-    k = max(ks)
-    aa = match(k, bsinks$k)
-    tmp.s = bsinks[ aa, ]
-    bestnets[rowno, c("windx", "k", "sink")] = tmp.s[1, c("windx", "k", "sink")]
-    bestnets[rowno, "component"] = mycomp
-    myw = subsetur(m, tmp.s[1, "windx"])
-    w1 = myw[ !is.element(myw, tmp.s[1, "sink"]) ]
-    w1indx = subsetr(m, w1)
-
-    rowno = rowno + 1
-    wlen = length(w1)
-    for(d in wlen:2){
-      aa = match(w1indx, bsinks$windx)
-      tmp.s = bsinks[ aa, ]
-      bestnets[rowno, c("windx", "k", "sink")] = tmp.s[1, c("windx", "k", "sink")]
-      bestnets[rowno, "component"] = mycomp
-      w = subsetur(m, tmp.s[1, "windx"])
-      w1 = w[ !is.element(w, tmp.s[1, "sink"]) ]
-      w1indx = subsetr(m, w1)
-      rowno = rowno + 1
+    rowno <- rowno + 1
+    wlen <- length(w1)
+    for (d in wlen:2) {
+      aa <- match(w1indx, bsinks$windx)
+      tmp_s <- bsinks[aa, ]
+      bestnets[rowno, nms[1:3]] <- tmp_s[1, nms[1:3]]
+      bestnets[rowno, "component"] <- mycomp
+      w <- subsetur(m, tmp_s[1, "windx"])
+      w1 <- w[!is.element(w, tmp_s[1, "sink"])]
+      w1indx <- subsetr(m, w1)
+      rowno <- rowno + 1
     }
 
-    # remove all rows in bsinks with sets that have elements of the largest w in bestnets
-    aa = NULL
-    for(j in 1:nrow(bsinks)){
-      wj = subsetur(m, bsinks[j, "windx"])
-      aa = c(aa, sum( is.element(wj, myw) ) == 0)
+    # remove all rows in bsinks with sets that have elements of the largest w
+    # in bestnets
+    aa <- NULL
+    for (j in seq_len(nrow(bsinks))) {
+      wj <- subsetur(m, bsinks[j, "windx"])
+      aa <- c(aa, sum(is.element(wj, myw)) == 0)
     }
-    bsinks = bsinks[aa, ]
-    mycomp = mycomp + 1
+    bsinks <- bsinks[aa, ]
+    mycomp <- mycomp + 1
   } # end while loop
 
   return(bestnets)
 } # end bestnet
 
 # get edges of best network connected components from ordered sinks
-sink2net = function(bnets, pp, pps, bps){
-  m = length(bps[[1]])
-  nms = c("node.source", "node.sink", "component")
-  mynets = as.data.frame(matrix(NA, nrow=0, ncol=length(nms)))
-  names(mynets) = nms
-  n.comp = length(unique(bnets$component))
-  rowno = 1
-  for(c in 1:n.comp){
-    tmpn = bnets[ is.element(bnets$component, c), ]
-    for(k in max(tmpn$k):2){
-      bp.set = NULL
-      tmp = tmpn[ is.element(tmpn$k, k), ]
-      s = tmp[ 1, "sink"]
-      w = subsetur(m, tmp[ 1, "windx"])
-      bp.set = swscore(s, w, pp, pps, bps)[[1]]
-      if(!is.null(bp.set[[1]])){
-        src = bp.set
-        snk = rep(s, length(bp.set))
-        cmp = rep(c, length(bp.set))
-        mynets[ rowno:(rowno+length(bp.set)-1),] = cbind(src, snk, cmp)
-        rowno = rowno+length(bp.set)
+sink2net <- function(bnets, pp, pps, bps) {
+  m <- length(bps[[1]])
+  nms <- c("node.source", "node.sink", "component")
+  mynets <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
+  names(mynets) <- nms
+  n_comp <- length(unique(bnets$component))
+  rowno <- 1
+  for (c_index in seq_len(n_comp)) {
+    tmpn <- bnets[is.element(bnets$component, c_index), ]
+    for (k in max(tmpn$k):2) {
+      bp_set <- NULL
+      tmp <- tmpn[is.element(tmpn$k, k), ]
+      s <- tmp[1, "sink"]
+      w <- subsetur(m, tmp[1, "windx"])
+      bp_set <- swscore(s, w, pp, pps, bps)[[1]]
+      if (!is.null(bp_set[[1]])) {
+        src <- bp_set
+        snk <- rep(s, length(bp_set))
+        cmp <- rep(c_index, length(bp_set))
+        mynets[rowno:(rowno + length(bp_set) - 1), ] <- cbind(src, snk, cmp)
+        rowno <- rowno + length(bp_set)
       }
     }
   }
