@@ -5,90 +5,6 @@
 
 using namespace Rcpp;
 
-// getIndex
-double getIndex(int m, const std::vector<double>& T);
-RcppExport SEXP _causnet_getIndex(SEXP mSEXP, SEXP TSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    Rcpp::traits::input_parameter< const std::vector<double>& >::type T(TSEXP);
-    rcpp_result_gen = Rcpp::wrap(getIndex(m, T));
-    return rcpp_result_gen;
-END_RCPP
-}
-// getSubsetFromIndex
-std::vector<int> getSubsetFromIndex(int n, int r);
-RcppExport SEXP _causnet_getSubsetFromIndex(SEXP nSEXP, SEXP rSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< int >::type r(rSEXP);
-    rcpp_result_gen = Rcpp::wrap(getSubsetFromIndex(n, r));
-    return rcpp_result_gen;
-END_RCPP
-}
-// getwsinkscores
-Rcpp::List getwsinkscores(std::vector<int> w, double w_networkscore, Rcpp::List& pp, Rcpp::List& po, Rcpp::List& pps, Rcpp::List& bps, int m);
-RcppExport SEXP _causnet_getwsinkscores(SEXP wSEXP, SEXP w_networkscoreSEXP, SEXP ppSEXP, SEXP poSEXP, SEXP ppsSEXP, SEXP bpsSEXP, SEXP mSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::vector<int> >::type w(wSEXP);
-    Rcpp::traits::input_parameter< double >::type w_networkscore(w_networkscoreSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List& >::type pp(ppSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List& >::type po(poSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List& >::type pps(ppsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List& >::type bps(bpsSEXP);
-    Rcpp::traits::input_parameter< int >::type m(mSEXP);
-    rcpp_result_gen = Rcpp::wrap(getwsinkscores(w, w_networkscore, pp, po, pps, bps, m));
-    return rcpp_result_gen;
-END_RCPP
-}
-// getIthColumn
-std::vector<double> getIthColumn(const std::vector<std::vector<double> >& vy, int i);
-RcppExport SEXP _causnet_getIthColumn(SEXP vySEXP, SEXP iSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<std::vector<double> >& >::type vy(vySEXP);
-    Rcpp::traits::input_parameter< int >::type i(iSEXP);
-    rcpp_result_gen = Rcpp::wrap(getIthColumn(vy, i));
-    return rcpp_result_gen;
-END_RCPP
-}
-// display
-void display(const std::vector<std::vector<double> >& vy);
-RcppExport SEXP _causnet_display(SEXP vySEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<std::vector<double> >& >::type vy(vySEXP);
-    display(vy);
-    return R_NilValue;
-END_RCPP
-}
-// display1
-void display1(const std::vector<int>& vy);
-RcppExport SEXP _causnet_display1(SEXP vySEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type vy(vySEXP);
-    display1(vy);
-    return R_NilValue;
-END_RCPP
-}
-// uniq
-std::vector<int> uniq(const std::vector<int>& input);
-RcppExport SEXP _causnet_uniq(SEXP inputSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const std::vector<int>& >::type input(inputSEXP);
-    rcpp_result_gen = Rcpp::wrap(uniq(input));
-    return rcpp_result_gen;
-END_RCPP
-}
 // bestSinksCnew
 List bestSinksCnew(Rcpp::List& pp, Rcpp::List& ms, Rcpp::List& po, Rcpp::List& pps, Rcpp::List& ppss, Rcpp::List& bps, Rcpp::List& mydata);
 RcppExport SEXP _causnet_bestSinksCnew(SEXP ppSEXP, SEXP msSEXP, SEXP poSEXP, SEXP ppsSEXP, SEXP ppssSEXP, SEXP bpsSEXP, SEXP mydataSEXP) {
@@ -108,13 +24,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_causnet_getIndex", (DL_FUNC) &_causnet_getIndex, 2},
-    {"_causnet_getSubsetFromIndex", (DL_FUNC) &_causnet_getSubsetFromIndex, 2},
-    {"_causnet_getwsinkscores", (DL_FUNC) &_causnet_getwsinkscores, 7},
-    {"_causnet_getIthColumn", (DL_FUNC) &_causnet_getIthColumn, 2},
-    {"_causnet_display", (DL_FUNC) &_causnet_display, 1},
-    {"_causnet_display1", (DL_FUNC) &_causnet_display1, 1},
-    {"_causnet_uniq", (DL_FUNC) &_causnet_uniq, 1},
     {"_causnet_bestSinksCnew", (DL_FUNC) &_causnet_bestSinksCnew, 7},
     {NULL, NULL, 0}
 };

@@ -9,8 +9,6 @@ using namespace Rcpp;
 
 //Compute index r for some set T, which is a subset of a set with n elements
 //watch out for rounding errors!!!
-//' @export
-// [[Rcpp::export]]
 double getIndex (int m,const std::vector<double> & T)
 {
   Rcpp::Environment base("package:causnet");
@@ -18,8 +16,6 @@ double getIndex (int m,const std::vector<double> & T)
   return as<double>(f(Named("n")=m, Named("T")=T));
 }
 
-//' @export
-// [[Rcpp::export]]
 std::vector<int> getSubsetFromIndex (int n,int r)
 {
   Rcpp::Environment base("package:causnet");
@@ -28,9 +24,6 @@ std::vector<int> getSubsetFromIndex (int n,int r)
   return v;
 }
 
-
-//' @export
-// [[Rcpp::export]]
 Rcpp::List getwsinkscores(std::vector<int> w,
                           double w_networkscore,
                           Rcpp::List& pp,
@@ -46,8 +39,6 @@ Rcpp::List getwsinkscores(std::vector<int> w,
 }
 
 //return ith column vector of vec of vectors
-//' @export
-// [[Rcpp::export]]
 std::vector<double> getIthColumn(const std::vector<std::vector<double> > & vy, int i)
 {
   vector<double> wsc;
@@ -58,33 +49,6 @@ std::vector<double> getIthColumn(const std::vector<std::vector<double> > & vy, i
   return wsc;
 }
 
-//print a double vector of vectors
-//' @export
-// [[Rcpp::export]]
-void display (const std::vector<std::vector<double> > & vy)
-{
-  for (int i = 0; i < vy.size(); ++i)
-  {
-    for (int j = 0; j < vy[i].size(); ++j)
-      std::cout << " " << vy[i][j];
-    std::cout << std::endl;
-  }
-}
-
-//print a vector
-//' @export
-// [[Rcpp::export]]
-void display1 (const std::vector<int> & vy)
-{
-  for (int i = 0; i < vy.size(); ++i)
-  {
-    std::cout << " " << vy[i];
-    std::cout << std::endl;
-  }
-
-}
-
-// [[Rcpp::export]]
 std::vector<int> uniq(const std::vector<int> & input)
 {
   std::unordered_set<int> set;
@@ -96,7 +60,16 @@ std::vector<int> uniq(const std::vector<int> & input)
   return v;
 }
 
+//' Internal function to find the Best Sink
+//'
 //' @export
+//' @param pp list
+//' @param ms list
+//' @param po list
+//' @param pps list
+//' @param ppss list
+//' @param bps list
+//' @param mydata list
 // [[Rcpp::export]]
 List bestSinksCnew(Rcpp::List  & pp,   Rcpp::List & ms,
                    Rcpp::List & po,  Rcpp::List & pps,
