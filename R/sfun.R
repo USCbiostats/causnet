@@ -31,6 +31,6 @@ sfun <- function(mydata) {
 
   # network edges and labeled connected components
   mylinks <- sink2net(bnets, pp, pps, bps)
-  names(mylinks)[1:2] <- c("from", "to")
+  names(mylinks[[1]])[1:2] <- c("from", "to")
   return(mylinks)
 } # end sfun

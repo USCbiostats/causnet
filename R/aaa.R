@@ -277,6 +277,8 @@ sink2net <- function(bnets, pp, pps, bps) {
   names(mynets) <- nms
   n_comp <- length(unique(bnets$component))
   rowno <- 1
+  n_conflicts <- integer()
+
   for (c_index in seq_len(n_comp)) {
     tmpn <- bnets[is.element(bnets$component, c_index), ]
     for (k in max(tmpn$k):2) {
@@ -287,6 +289,7 @@ sink2net <- function(bnets, pp, pps, bps) {
       bp_set <- swscore(s, w, pp, pps, bps)[[1]]
       if (!is.null(bp_set[[1]])) {
         src <- bp_set
+        n_conflicts <- c(n_conflicts, length(src[[1]]))
         # Sampling 1 best sink at random
         src[[1]] <- src[[1]][sample.int(length(src[[1]]), 1)]
 
@@ -297,5 +300,5 @@ sink2net <- function(bnets, pp, pps, bps) {
       }
     }
   }
-  return(mynets)
+  return(list(mynets, n_conflicts))
 } # end sink2net
