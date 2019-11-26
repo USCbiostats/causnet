@@ -287,6 +287,9 @@ sink2net <- function(bnets, pp, pps, bps) {
       bp_set <- swscore(s, w, pp, pps, bps)[[1]]
       if (!is.null(bp_set[[1]])) {
         src <- bp_set
+        # Sampling 1 best sink at random
+        src[[1]] <- src[[1]][sample.int(length(src[[1]]), 1)]
+
         snk <- rep(s, length(bp_set))
         cmp <- rep(c_index, length(bp_set))
         mynets[rowno:(rowno + length(bp_set) - 1), ] <- cbind(src, snk, cmp)
