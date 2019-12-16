@@ -300,5 +300,6 @@ sink2net <- function(bnets, pp, pps, bps) {
       }
     }
   }
-  return(list(mynets, n_conflicts))
+  return(list(network = mynets,
+              n_best_parents = n_conflicts))
 } # end sink2net
