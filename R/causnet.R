@@ -23,7 +23,7 @@ causnet <- function(data, alpha = 0.05) {
   possible_parents <- find_possible_parents(data, alpha)
 
   # possible offspring
-  po <- pofun(possible_parents)
+  possible_offspring <- find_possible_offspring(possible_parents)
 
   # all sets of possible parents
   pps <- pp_sets(possible_parents)
@@ -35,7 +35,8 @@ causnet <- function(data, alpha = 0.05) {
   bps <- pp_sets_bs(pps, ppss, ms)
 
   # best sinks for all possible connected components
-  bsinksc <- bestSinksCnew(possible_parents, ms, po, pps, ppss, bps, data)
+  bsinksc <- bestSinksCnew(possible_parents, ms, possible_offspring,
+                           pps, ppss, bps, data)
 
   # ordered best sinks for labeled connected components
   bnets <- bestnet(bsinksc, n_var)

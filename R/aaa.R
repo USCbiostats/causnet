@@ -1,17 +1,3 @@
-# function to reformat a list of possible parents, pp, into a list of possible
-# offspring, po
-pofun <- function(pp) {
-  po <- vector("list", length(pp))
-  for (i in seq_along(pp)) {
-    for (j in seq_along(pp)) {
-      if (is.element(i, pp[[j]])) {
-        po[[i]] <- c(po[[i]], j)
-      }
-    }
-  }
-  return(po)
-}
-
 #' create list object with all combinations of vec
 #' @keywords internal
 #' @importFrom utils combn
