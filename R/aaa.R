@@ -13,27 +13,6 @@ score_bic_lm <- function(y, x, mydat) {
   return(bic)
 }
 
-## create object with scores for all sets of possible parents for each node
-pp_sets_s <- function(mydata, pps) {
-  n <- length(pps)
-  ppss <- vector("list", n) # possible parent set scores
-  ppss1 <- vector("list", n) # possible parent best sets
-  ppss2 <- vector("list", n) # possible parent best set scores
-  for (v in 1:n) {
-    n_pp <- ncol(pps[[v]][[1]])
-    for (set.size in seq_len(n_pp)) {
-      ppss[[v]][[set.size]] <- rep(NA, ncol(pps[[v]][[set.size]]))
-      ppss1[[v]][[set.size]] <- rep(NA, ncol(pps[[v]][[set.size]]))
-      ppss2[[v]][[set.size]] <- rep(NA, ncol(pps[[v]][[set.size]]))
-      for (pset.i in seq_len(ncol(pps[[v]][[set.size]]))) {
-        v_pset <- pps[[v]][[set.size]][, pset.i]
-        ppss[[v]][[set.size]][pset.i] <- score_bic_lm(v, v_pset, mydata)
-      }
-    }
-  }
-  return(ppss)
-}
-
 # get a score, given a node, its parent set, and parent set scores
 # ms = scores of nodes w/ no parents
 get.score <- function(v, pset, pps, ppss, ms) {
