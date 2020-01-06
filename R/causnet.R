@@ -4,7 +4,7 @@
 #'
 #' @return data.frame with 3 columns; from, to and component
 #' @export
-sfun <- function(mydata) {
+causnet <- function(mydata) {
   n_var <- ncol(mydata)
 
   # node scores, no parents
@@ -33,4 +33,4 @@ sfun <- function(mydata) {
   mylinks <- sink2net(bnets, pp, pps, bps)
   names(mylinks[[1]])[1:2] <- c("from", "to")
   return(mylinks)
-} # end sfun
+}
