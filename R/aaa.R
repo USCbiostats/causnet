@@ -1,29 +1,3 @@
-#' create list object with all combinations of vec
-#' @keywords internal
-#' @importFrom utils combn
-comb1 <- function(vec) {
-  n <- length(vec)
-  out <- vector("list", n)
-  for (j in 1:n) {
-    if (length(vec) > 1) {
-      out[[j]] <- combn(vec, j)
-    } else {
-      out[[j]] <- matrix(vec, nrow = 1, ncol = 1)
-    }
-  }
-  return(out)
-}
-
-## create all sets of possible parents for each node
-pp_sets <- function(pp) {
-  n <- length(pp)
-  pps <- vector("list", n)
-  for (j in 1:n) {
-    pps[[j]] <- comb1(pp[[j]])
-  }
-  return(pps)
-}
-
 #' Bigger is better score for node y and parents x
 #' @keywords internal
 #' @importFrom stats BIC lm

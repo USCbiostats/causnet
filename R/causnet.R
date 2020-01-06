@@ -26,23 +26,23 @@ causnet <- function(data, alpha = 0.05) {
   possible_offspring <- find_possible_offspring(possible_parents)
 
   # all sets of possible parents
-  pps <- pp_sets(possible_parents)
+  possible_parent_sets <- find_possible_parent_sets(possible_parents)
 
   # scores for all sets of possible parents for each node
-  ppss <- pp_sets_s(data, pps)
+  ppss <- pp_sets_s(data, possible_parent_sets)
 
   # BEST parent sets and scores for all sets of possible parents for each node
-  bps <- pp_sets_bs(pps, ppss, ms)
+  bps <- pp_sets_bs(possible_parent_sets, ppss, ms)
 
   # best sinks for all possible connected components
   bsinksc <- bestSinksCnew(possible_parents, ms, possible_offspring,
-                           pps, ppss, bps, data)
+                           possible_parent_sets, ppss, bps, data)
 
   # ordered best sinks for labeled connected components
   bnets <- bestnet(bsinksc, n_var)
 
   # network edges and labeled connected components
-  out <- sink2net(bnets, possible_parents, pps, bps)
+  out <- sink2net(bnets, possible_parents, possible_parent_sets, bps)
   names(out[[1]])[1:2] <- c("from", "to")
   out
 }
