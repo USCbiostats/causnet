@@ -90,15 +90,6 @@ pp_sets_s <- function(mydata, pps) {
   return(ppss)
 }
 
-# compute scores for nodes with no parents
-mscores <- function(vset, mydata) {
-  mscore <- NULL
-  for (v in vset) {
-    mscore <- c(mscore, score_bic_lm(v, NA, mydata))
-  }
-  return(mscore)
-}
-
 # get a score, given a node, its parent set, and parent set scores
 # ms = scores of nodes w/ no parents
 get.score <- function(v, pset, pps, ppss, ms) {

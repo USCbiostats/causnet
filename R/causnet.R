@@ -1,4 +1,4 @@
-#' Find Globally Optimal Causal Network
+#' Find globally optimal causal network
 #'
 #' @param data A data.frame of numeric variables.
 #' @param alpha Numerical, p-value threshold to determine cutoff for possible
@@ -19,7 +19,7 @@ causnet <- function(data, alpha = 0.05) {
   }
 
   # node scores, no parents
-  ms <- mscores(seq_len(n_var), data)
+  ms <- no_parent_score(data)
   pp <- mypp(data, alpha, n_var)
 
   # possible offspring

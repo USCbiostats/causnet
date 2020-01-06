@@ -2,7 +2,7 @@
 % Please edit documentation in R/causnet.R
 \name{causnet}
 \alias{causnet}
-\title{Find Globally Optimal Causal Network}
+\title{Find globally optimal causal network}
 \usage{
 causnet(data, alpha = 0.05)
 }
@@ -17,7 +17,7 @@ A list with 2 elements: a data data.frame with 3 columns; from, to
 and component, and a vector of number of best parents.
 }
 \description{
-Find Globally Optimal Causal Network
+Find globally optimal causal network
 }
 \examples{
 new_data <- simdat(n_var = 5)
