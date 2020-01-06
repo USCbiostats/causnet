@@ -2,16 +2,24 @@
 % Please edit documentation in R/causnet.R
 \name{causnet}
 \alias{causnet}
-\title{Main function}
+\title{Find Globally Optimal Causal Network}
 \usage{
-causnet(mydata)
+causnet(data, alpha = 0.05)
 }
 \arguments{
-\item{mydata}{data.frame}
+\item{data}{A data.frame of numeric variables.}
+
+\item{alpha}{Numerical, p-value threshold to determine cutoff for possible
+parents.}
 }
 \value{
-data.frame with 3 columns; from, to and component
+A list with 2 elements: a data data.frame with 3 columns; from, to
+and component, and a vector of number of best parents.
 }
 \description{
-Main function
+Find Globally Optimal Causal Network
+}
+\examples{
+new_data <- simdat(n_var = 5)
+out <- causnet(data = new_data, 0.5)
 }
