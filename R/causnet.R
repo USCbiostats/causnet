@@ -20,13 +20,13 @@ causnet <- function(data, alpha = 0.05) {
 
   # node scores, no parents
   ms <- no_parent_score(data)
-  pp <- mypp(data, alpha, n_var)
+  possible_parents <- find_possible_parents(data, alpha)
 
   # possible offspring
-  po <- pofun(pp)
+  po <- pofun(possible_parents)
 
   # all sets of possible parents
-  pps <- pp_sets(pp)
+  pps <- pp_sets(possible_parents)
 
   # scores for all sets of possible parents for each node
   ppss <- pp_sets_s(data, pps)
@@ -35,13 +35,13 @@ causnet <- function(data, alpha = 0.05) {
   bps <- pp_sets_bs(pps, ppss, ms)
 
   # best sinks for all possible connected components
-  bsinksc <- bestSinksCnew(pp, ms, po, pps, ppss, bps, data)
+  bsinksc <- bestSinksCnew(possible_parents, ms, po, pps, ppss, bps, data)
 
   # ordered best sinks for labeled connected components
   bnets <- bestnet(bsinksc, n_var)
 
   # network edges and labeled connected components
-  out <- sink2net(bnets, pp, pps, bps)
+  out <- sink2net(bnets, possible_parents, pps, bps)
   names(out[[1]])[1:2] <- c("from", "to")
   out
 }

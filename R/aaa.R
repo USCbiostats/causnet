@@ -1,19 +1,3 @@
-#' function to find possible parents
-#' @keywords internal
-#' @importFrom stats cor.test
-mypp <- function(mydata, alpha, n_var) {
-  pp <- vector("list", n_var)
-  for (v in 1:n_var) {
-    for (p in 1:n_var) {
-      if (p != v) {
-        p_value <- cor.test(mydata[, v], mydata[, p])$p.value
-        if (p_value < alpha) pp[[v]] <- c(pp[[v]], p)
-      }
-    }
-  }
-  return(pp)
-} # end mypp
-
 # function to reformat a list of possible parents, pp, into a list of possible
 # offspring, po
 pofun <- function(pp) {
