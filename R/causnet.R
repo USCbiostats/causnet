@@ -37,6 +37,8 @@ causnet <- function(data, alpha = 0.05) {
 
   # BEST parent sets and scores for all sets of possible parents for each node
   bps <- pp_sets_bs(possible_parent_sets, possible_parent_set_scores, ms)
+  bps1 <- best_possible_parent_sets(ms, possible_parent_sets1,
+                                    possible_parent_set_scores1)
 
   # best sinks for all possible connected components
   bsinksc <- bestSinksCnew(possible_parents, ms, possible_offspring,
