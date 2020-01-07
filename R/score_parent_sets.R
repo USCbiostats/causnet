@@ -19,6 +19,15 @@ score_possible_parent_sets <- function(data, pps) {
   ppss2old(ppss, pps)
 }
 
+score_possible_parent_sets1 <- function(data, pps) {
+  lapply(
+    seq_along(pps),
+    function(vertex) {
+      ps_score(pps[[vertex]], vertex, data)
+    }
+  )
+}
+
 ps_score <- function(ps, vertex, data) {
   vapply(ps, function(x) score_bic_lm(vertex, x, data),
          FUN.VALUE = numeric(1))
@@ -37,16 +46,4 @@ ppss2old <- function(ppss, pps) {
              )
            )
          })
-}
-
-ps2list <- function(ps) {
-  Reduce(c, lapply(ps, mat2list))
-}
-
-mat2list <- function(mat) {
-  lapply(seq_len(ncol(mat)), function(x) mat[, x])
-}
-
-pps_mat2list <- function(pps) {
-  lapply(pps, ps2list)
 }

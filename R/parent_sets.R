@@ -14,6 +14,10 @@ find_possible_parent_sets <- function(possible_parents) {
   lapply(possible_parents, comb1)
 }
 
+find_possible_parent_sets1 <- function(possible_parents) {
+  pps_mat2list(lapply(possible_parents, comb1))
+}
+
 #' Calculate all possible parent set of a set
 #'
 #' @noRd
@@ -30,4 +34,16 @@ combn_vec <- function(n, x) {
   } else {
     return(utils::combn(x, n))
   }
+}
+
+ps2list <- function(ps) {
+  Reduce(c, lapply(ps, mat2list))
+}
+
+mat2list <- function(mat) {
+  lapply(seq_len(ncol(mat)), function(x) mat[, x])
+}
+
+pps_mat2list <- function(pps) {
+  lapply(pps, ps2list)
 }

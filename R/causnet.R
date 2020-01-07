@@ -27,10 +27,13 @@ causnet <- function(data, alpha = 0.05) {
 
   # all sets of possible parents
   possible_parent_sets <- find_possible_parent_sets(possible_parents)
+  possible_parent_sets1 <- find_possible_parent_sets1(possible_parents)
 
   # scores for all sets of possible parents for each node
   possible_parent_set_scores <-
     score_possible_parent_sets(data, possible_parent_sets)
+  possible_parent_set_scores1 <-
+    score_possible_parent_sets1(data, possible_parent_sets1)
 
   # BEST parent sets and scores for all sets of possible parents for each node
   bps <- pp_sets_bs(possible_parent_sets, possible_parent_set_scores, ms)
