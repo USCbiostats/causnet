@@ -45,15 +45,15 @@ library(causnet)
 
 # simulate data
 set.seed(1234)
-mydata = simdat(n.var = 5)
+mydata = simdat(n_var = 5)
 
 # causnet results
-links.s = sfun(mydata)
+links.s = causnet(mydata)
 
 links.s
-
-netplot_jm(links.s)
 ```
 
-
+## Code of Conduct
+  
+  Please note that the causnet project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/1/0/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
 

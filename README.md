@@ -36,19 +36,26 @@ library(causnet)
 
 # simulate data
 set.seed(1234)
-mydata = simdat(n.var = 5)
+mydata = simdat(n_var = 5)
 
 # causnet results
-links.s = sfun(mydata)
+links.s = causnet(mydata)
 
 links.s
+#> $network
 #>   from to component
 #> 1    4  5         1
 #> 2    3  4         1
 #> 3    2  1         1
 #> 4    2  3         1
-
-netplot_jm(links.s)
+#> 
+#> $n_best_parents
+#> [1] 1 1 1 1
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+## Code of Conduct
+
+Please note that the causnet project is released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/1/0/0/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
