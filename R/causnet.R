@@ -45,6 +45,10 @@ causnet <- function(data, alpha = 0.05) {
                            possible_parent_sets, possible_parent_set_scores,
                            bps, data)
 
+  bsinksc1 <- best_sinks(possible_parents, ms, possible_offspring,
+                         possible_parent_sets1, bps1)
+  bsinksc1 <- unique(bsinksc1)
+
   # ordered best sinks for labeled connected components
   bnets <- bestnet(bsinksc, n_var)
 
