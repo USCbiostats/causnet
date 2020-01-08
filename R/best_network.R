@@ -6,7 +6,7 @@
 #'
 #' @return a data.frame with 4 variables, wscore, windx, k, sink.
 #' @noRd
-best_network <- function(bsinks, m) {
+find_best_network <- function(bsinks, m) {
   nms <- c("windx", "k", "sink", "component")
   bestnets <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
   names(bestnets) <- nms

@@ -11,10 +11,6 @@
 #'
 #' @noRd
 find_possible_parent_sets <- function(possible_parents) {
-  lapply(possible_parents, comb1)
-}
-
-find_possible_parent_sets1 <- function(possible_parents) {
   pps_mat2list(lapply(possible_parents, comb1))
 }
 

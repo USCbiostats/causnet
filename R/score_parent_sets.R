@@ -9,17 +9,6 @@
 #' @return A list of lists of vectors of numerics.
 #' @noRd
 score_possible_parent_sets <- function(data, pps) {
-  ppss <- lapply(
-    seq_along(pps),
-    function(vertex) {
-      ps_score(pps_mat2list(pps)[[vertex]], vertex, data)
-    }
-  )
-
-  ppss2old(ppss, pps)
-}
-
-score_possible_parent_sets1 <- function(data, pps) {
   lapply(
     seq_along(pps),
     function(vertex) {

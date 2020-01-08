@@ -11,6 +11,8 @@
 #' @examples
 #' new_data <- simdat(n_var = 5)
 #' out <- causnet(data = new_data, 0.5)
+#'
+#' netplot_jm(out$network)
 causnet <- function(data, alpha = 0.05) {
 
   if (length(alpha) != 1 || !is.numeric(alpha) || alpha < 0 || alpha > 1) {
@@ -26,35 +28,25 @@ causnet <- function(data, alpha = 0.05) {
 
   # all sets of possible parents
   possible_parent_sets <- find_possible_parent_sets(possible_parents)
-  possible_parent_sets1 <- find_possible_parent_sets1(possible_parents)
 
   # scores for all sets of possible parents for each node
   possible_parent_set_scores <-
     score_possible_parent_sets(data, possible_parent_sets)
-  possible_parent_set_scores1 <-
-    score_possible_parent_sets1(data, possible_parent_sets1)
 
   # BEST parent sets and scores for all sets of possible parents for each node
-  bps <- pp_sets_bs(possible_parent_sets, possible_parent_set_scores, ms)
-  bps1 <- best_possible_parent_sets(ms, possible_parent_sets1,
-                                    possible_parent_set_scores1)
+  bps1 <- best_possible_parent_sets(ms, possible_parent_sets,
+                                    possible_parent_set_scores)
 
   # best sinks for all possible connected components
-  bsinksc <- bestSinksCnew(possible_parents, ms, possible_offspring,
-                           possible_parent_sets, possible_parent_set_scores,
-                           bps, data)
-
-  bsinksc1 <- best_sinks(possible_parents, ms, possible_offspring,
-                         possible_parent_sets1, bps1)
+  best_sinks <- find_best_sinks(possible_parents, ms, possible_offspring,
+                         possible_parent_sets, bps1)
 
   # ordered best sinks for labeled connected components
-  bnets <- best_network(bsinksc, ncol(data))
-  bnsets1 <- best_network(bsinksc1[with(bsinksc1, order(wscore, sink)),
+  bnsets <- find_best_network(best_sinks[with(best_sinks, order(wscore, sink)),
                               c("windx", "k", "sink", "wscore")], ncol(data))
 
   # network edges and labeled connected components
-  out <- sink2net(bnets, possible_parents, possible_parent_sets, bps)
-  out1 <- sink2net1(bnets, possible_parents, possible_parent_sets1, bps1)
-  names(out[[1]])[1:2] <- c("from", "to")
-  out
+  out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1)
+  names(out1[[1]])[1:2] <- c("from", "to")
+  out1
 }

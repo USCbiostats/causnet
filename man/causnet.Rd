@@ -22,4 +22,6 @@ Find globally optimal causal network
 \examples{
 new_data <- simdat(n_var = 5)
 out <- causnet(data = new_data, 0.5)
+
+netplot_jm(out$network)
 }

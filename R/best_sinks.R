@@ -16,7 +16,7 @@
 #'
 #' @return a data.frame with 4 variables, wscore, windx, k, sink.
 #' @noRd
-best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps) {
+find_best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps) {
   m <- length(possible_parents)
   nms <- c("windx", "k", "sink", "wscore")
   sinks.tmp <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
@@ -114,7 +114,7 @@ swscore <- function(s, w, pp, pps, bps) {
 #'
 #' @return List with two values.
 #' @noRd
-swscore1 <- function(s, w, pp, pps, bps) {
+swscore <- function(s, w, pp, pps, bps) {
   # find possible parents of s in w
   pset <- w[is.element(w, pp[[s]])]
   l <- length(pset)
@@ -204,7 +204,7 @@ wsink_scores1 <- function(w, w_networkscore, pp, po, pps, bps, m) {
     # Expand w by one po node, a possible sink, and compute score
     rowno <- 1
     for (s in wpo) {
-      s_score <- swscore1(s, w, pp, pps, bps)[[2]]
+      s_score <- swscore(s, w, pp, pps, bps)[[2]]
       wscore[rowno] <- s_score + w_networkscore
       windx[rowno] <- subsetr(m, c(w, s))
       k[rowno] <- length(w) + 1
