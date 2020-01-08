@@ -54,6 +54,7 @@ causnet <- function(data, alpha = 0.05) {
 
   # network edges and labeled connected components
   out <- sink2net(bnets, possible_parents, possible_parent_sets, bps)
+  out1 <- sink2net1(bnets, possible_parents, possible_parent_sets1, bps1)
   names(out[[1]])[1:2] <- c("from", "to")
   out
 }
