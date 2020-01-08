@@ -12,7 +12,6 @@
 #' new_data <- simdat(n_var = 5)
 #' out <- causnet(data = new_data, 0.5)
 causnet <- function(data, alpha = 0.05) {
-  n_var <- ncol(data)
 
   if (length(alpha) != 1 || !is.numeric(alpha) || alpha < 0 || alpha > 1) {
     stop("`alpha` must be a single numeric value in [0, 1].", call. = FALSE)
@@ -47,10 +46,11 @@ causnet <- function(data, alpha = 0.05) {
 
   bsinksc1 <- best_sinks(possible_parents, ms, possible_offspring,
                          possible_parent_sets1, bps1)
-  bsinksc1 <- unique(bsinksc1)
 
   # ordered best sinks for labeled connected components
-  bnets <- bestnet(bsinksc, n_var)
+  bnets <- best_network(bsinksc, ncol(data))
+  bnsets1 <- best_network(bsinksc1[with(bsinksc1, order(wscore, sink)),
+                              c("windx", "k", "sink", "wscore")], ncol(data))
 
   # network edges and labeled connected components
   out <- sink2net(bnets, possible_parents, possible_parent_sets, bps)
