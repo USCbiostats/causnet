@@ -1,4 +1,5 @@
-#' Get BEST parent sets and scores for all sets of possible parents for each node
+#' Get BEST parent sets and scores for all sets of possible parents for each
+#' node
 #'
 #' @param ms Numeric vector, node scores for no parents. Output of
 #'     no_parent_score. Should have same number of elements as variables in
@@ -14,11 +15,17 @@
 best_possible_parent_sets <- function(ms, pps, ppss, max_parents) {
   # for each possible parent set, compare score w/ all subsets to identify the
   # best possible parent sets
-  tmp <- lapply(seq_along(pps), function(y) lapply(pps[[y]], function(x) bestps(y, x, pps, ppss, ms, max_parents)))
+  tmp <- lapply(
+    seq_along(pps),
+    function(y) lapply(pps[[y]],
+                       function(x) bestps(y, x, pps, ppss, ms, max_parents))
+    )
 
   out <- list()
-  out[[1]] <- lapply(seq_along(tmp), function(y) lapply(tmp[[y]], function(x) x[[1]]))
-  out[[2]] <- lapply(seq_along(tmp), function(y) lapply(tmp[[y]], function(x) x[[2]]))
+  out[[1]] <- lapply(seq_along(tmp),
+                     function(y) lapply(tmp[[y]], function(x) x[[1]]))
+  out[[2]] <- lapply(seq_along(tmp),
+                     function(y) lapply(tmp[[y]], function(x) x[[2]]))
   out
 }
 
@@ -51,11 +58,9 @@ get.score <- function(v, pset, pps, ppss, ms) {
   if (length(pset) < 1) {
     myscore <- ms[v]
   } else {
-    l <- length(pset)
-    aa <- vapply(pps[[v]], function(x) setequal(x, pset), FUN.VALUE = logical(1))
+    aa <- vapply(pps[[v]],
+                 function(x) setequal(x, pset), FUN.VALUE = logical(1))
     myscore <- ppss[[v]][aa]
   }
   return(myscore)
 } # end get.score
-
-

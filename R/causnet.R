@@ -28,7 +28,8 @@ causnet <- function(data, alpha = 0.05, max_parents = 2) {
   possible_offspring <- find_possible_offspring(possible_parents)
 
   # all sets of possible parents
-  possible_parent_sets <- find_possible_parent_sets(possible_parents, max_parents)
+  possible_parent_sets <- find_possible_parent_sets(possible_parents,
+                                                    max_parents)
 
   # scores for all sets of possible parents for each node
   possible_parent_set_scores <-
@@ -48,7 +49,8 @@ causnet <- function(data, alpha = 0.05, max_parents = 2) {
                               c("windx", "k", "sink", "wscore")], ncol(data))
 
   # network edges and labeled connected components
-  out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1, max_parents)
+  out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1,
+                   max_parents)
   names(out1[[1]])[1:2] <- c("from", "to")
   out1
 }

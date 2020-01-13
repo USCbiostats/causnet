@@ -17,42 +17,42 @@
 #'
 #' @return a data.frame with 4 variables, wscore, windx, k, sink.
 #' @noRd
-find_best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps, max_parents) {
+find_best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps,
+                            max_parents) {
   m <- length(possible_parents)
   nms <- c("windx", "k", "sink", "wscore")
-  sinks.tmp <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
-  names(sinks.tmp) <- nms
+  sinks_tmp <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
+  names(sinks_tmp) <- nms
 
   # best sinks and scores for subnetworks of one node, which is the node itself
   # and its score
   for (s in 1:m) {
-    sinks.tmp[s, "windx"] <- subsetr(m, s)
-    sinks.tmp[s, "k"] <- 1
-    sinks.tmp[s, "sink"] <- s
-    sinks.tmp[s, "wscore"] <- ms[s]
+    sinks_tmp[s, "windx"] <- subsetr(m, s)
+    sinks_tmp[s, "k"] <- 1
+    sinks_tmp[s, "sink"] <- s
+    sinks_tmp[s, "wscore"] <- ms[s]
   }
-  mysinks <- sinks.tmp
-  bsinks <- sinks.tmp[0, ]
+  bsinks <- sinks_tmp[0, ]
 
   # best sinks and scores for subnetworks of size 2:m
   for (k in 2:m) {
 
-    sinks.tmp1 <- list()
+    sinks_tmp1 <- list()
 
-    ws <- numeric(nrow(sinks.tmp))
-    for (j in 1:nrow(sinks.tmp)) {
-      ws[j] <- length(subsetur(m, sinks.tmp[j, "windx"]))
+    ws <- numeric(nrow(sinks_tmp))
+    for (j in seq_len(nrow(sinks_tmp))) {
+      ws[j] <- length(subsetur(m, sinks_tmp[j, "windx"]))
     }
 
-    total_length <- sum(ws)
     wscore <- windx <- k <- sink <- numeric(m * m) #find better upper bound
 
     index <- 1
-    for (j in seq_len(nrow(sinks.tmp))) {
-      w                    <- subsetur(m, sinks.tmp[j, "windx"])
-      w.networkscore       <- sinks.tmp[j, "wscore"]
-      w1sinks              <- wsink_scores(w, w.networkscore, possible_parents,
-                                           possible_offspring, pps, bps, m, max_parents)
+    for (j in seq_len(nrow(sinks_tmp))) {
+      w                    <- subsetur(m, sinks_tmp[j, "windx"])
+      w_networkscore       <- sinks_tmp[j, "wscore"]
+      w1sinks              <- wsink_scores(w, w_networkscore, possible_parents,
+                                           possible_offspring, pps, bps, m,
+                                           max_parents)
       index_subset         <- seq_along(w1sinks$wscore) - 1 + index
       wscore[index_subset] <- w1sinks$wscore
       windx[index_subset]  <- w1sinks$windx
@@ -60,24 +60,24 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps, 
       sink[index_subset]   <- w1sinks$sink
       index                <- index + length(index_subset)
     }
-    sinks.tmp1  <- data.frame(wscore = wscore[seq_len(index - 1)],
+    sinks_tmp1  <- data.frame(wscore = wscore[seq_len(index - 1)],
                               windx  = windx[seq_len(index - 1)],
                               k      = k[seq_len(index - 1)],
                               sink   = sink[seq_len(index - 1)])
 
     # break k loop if there are no more offspring for any sets
-    if (nrow(sinks.tmp1) == 0) break
+    if (nrow(sinks_tmp1) == 0) break
 
     # for each w, find the best sinks
-    myws <- unique(sinks.tmp1$windx)
-    for(wind in 1:length(myws)){
+    myws <- unique(sinks_tmp1$windx)
+    for (wind in seq_along(myws)) {
       myw    <- myws[wind]
-      tmp    <- sinks.tmp1[is.element(sinks.tmp1$windx, myw), ]
+      tmp    <- sinks_tmp1[is.element(sinks_tmp1$windx, myw), ]
       tmp1   <- tmp[tmp$wscore >= max(tmp$wscore), ]
       bsinks <- rbind(bsinks, tmp1)
     }
     bsinks <- unique(bsinks)
-    sinks.tmp <- bsinks[is.element( bsinks$k, k), ]
+    sinks_tmp <- bsinks[is.element(bsinks$k, k), ]
   }
 
   return(bsinks[is.finite(bsinks$wscore), ])
@@ -126,7 +126,8 @@ swscore <- function(s, w, pp, pps, bps, max_parents) {
 #'     find_possible_parents.
 #' @param po A list of integers, output from
 #'     find_possible_offspring.
-#' @param @param pps Possible parent sets, output from `find_possible_parent_sets`.
+#' @param @param pps Possible parent sets, output from
+#'     `find_possible_parent_sets`.
 #' @param bps A list of best possible parent set, output from
 #'     `best_possible_parent_sets`.
 #' @param m Numeric, number of variables.
