@@ -3,6 +3,7 @@
 #' @param data A data.frame of numeric variables.
 #' @param alpha Numerical, p-value threshold to determine cutoff for possible
 #'   parents.
+#' @param max_parents Numeric, maximal number of parents. Defaults to 2.
 #'
 #' @return A list with 2 elements: a data data.frame with 3 columns; from, to
 #' and component, and a vector of number of best parents.
@@ -13,7 +14,7 @@
 #' out <- causnet(data = new_data, 0.5)
 #'
 #' netplot_jm(out$network)
-causnet <- function(data, alpha = 0.05) {
+causnet <- function(data, alpha = 0.05, max_parents = 2) {
 
   if (length(alpha) != 1 || !is.numeric(alpha) || alpha < 0 || alpha > 1) {
     stop("`alpha` must be a single numeric value in [0, 1].", call. = FALSE)
@@ -27,7 +28,7 @@ causnet <- function(data, alpha = 0.05) {
   possible_offspring <- find_possible_offspring(possible_parents)
 
   # all sets of possible parents
-  possible_parent_sets <- find_possible_parent_sets(possible_parents)
+  possible_parent_sets <- find_possible_parent_sets(possible_parents, max_parents)
 
   # scores for all sets of possible parents for each node
   possible_parent_set_scores <-
@@ -35,18 +36,19 @@ causnet <- function(data, alpha = 0.05) {
 
   # BEST parent sets and scores for all sets of possible parents for each node
   bps1 <- best_possible_parent_sets(ms, possible_parent_sets,
-                                    possible_parent_set_scores)
+                                    possible_parent_set_scores,
+                                    max_parents)
 
   # best sinks for all possible connected components
   best_sinks <- find_best_sinks(possible_parents, ms, possible_offspring,
-                         possible_parent_sets, bps1)
+                         possible_parent_sets, bps1, max_parents)
 
   # ordered best sinks for labeled connected components
   bnsets <- find_best_network(best_sinks[with(best_sinks, order(wscore, sink)),
                               c("windx", "k", "sink", "wscore")], ncol(data))
 
   # network edges and labeled connected components
-  out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1)
+  out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1, max_parents)
   names(out1[[1]])[1:2] <- c("from", "to")
   out1
 }

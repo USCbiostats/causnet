@@ -7,12 +7,13 @@
 #' @param pps Possible parent sets, output from `find_possible_parent_sets`.
 #' @param bps A list of best possible parent set, output from
 #'     `best_possible_parent_sets`.
+#' @param max_parents Numeric, maximal number of parents.
 #'
 #' @return List with two elements. First element is network data.frame with 3
 #'     elements; node.source, node.sink and component. And vector n_best_parents
 #'     indicating number of best parents at each consideration.
 #' @noRd
-sink2net <- function(bnets, pp, pps, bps) {
+sink2net <- function(bnets, pp, pps, bps, max_parents) {
   m <- length(bps[[1]])
   nms <- c("node.source", "node.sink", "component")
   mynets <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
@@ -28,7 +29,7 @@ sink2net <- function(bnets, pp, pps, bps) {
       tmp <- tmpn[is.element(tmpn$k, k), ]
       s <- tmp[1, "sink"]
       w <- subsetur(m, tmp[1, "windx"])
-      bp_set <- swscore(s, w, pp, pps, bps)[[1]]
+      bp_set <- swscore(s, w, pp, pps, bps, max_parents)[[1]]
       if (!is.null(bp_set[[1]])) {
         src <- bp_set
         n_conflicts <- c(n_conflicts, length(src[[1]]))

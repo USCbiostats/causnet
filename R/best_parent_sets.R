@@ -6,14 +6,15 @@
 #' @param pps Possible parent sets, output from `find_possible_parent_sets`.
 #' @param ppss Possible parent set scores, output from
 #'     `score_possible_parent_sets`.
+#' @param max_parents Numeric, maximal number of parents.
 #'
 #' @return list with 2 list. First list is list of lists with best parent set.
 #'     Second list is a list of lists with scores of the best network.
 #' @noRd
-best_possible_parent_sets <- function(ms, pps, ppss) {
+best_possible_parent_sets <- function(ms, pps, ppss, max_parents) {
   # for each possible parent set, compare score w/ all subsets to identify the
   # best possible parent sets
-  tmp <- lapply(seq_along(pps), function(y) lapply(pps[[y]], function(x) bestps(y, x, pps, ppss, ms)))
+  tmp <- lapply(seq_along(pps), function(y) lapply(pps[[y]], function(x) bestps(y, x, pps, ppss, ms, max_parents)))
 
   out <- list()
   out[[1]] <- lapply(seq_along(tmp), function(y) lapply(tmp[[y]], function(x) x[[1]]))
@@ -23,11 +24,11 @@ best_possible_parent_sets <- function(ms, pps, ppss) {
 
 # function to find best parent set of s, for parent set pset, given pps, ppss,
 # ms
-bestps <- function(v, pset, pps, ppss, ms) {
+bestps <- function(v, pset, pps, ppss, ms, max_parents) {
   # all subsets of pset
   best_score <- get.score(v, NULL, pps, ppss, ms)
   best_set <- NULL
-  sb <- comb1(pset)
+  sb <- comb1(pset, max_parents)
   for (j in seq_along(sb)) {
     for (k in seq_len(ncol(sb[[j]]))) {
       tmp_set <- sb[[j]][, k]

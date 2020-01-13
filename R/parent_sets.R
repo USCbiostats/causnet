@@ -6,19 +6,20 @@
 #'
 #' @param possible_parents A list of integers, output from
 #'     find_possible_parents.
+#' @param max_parents Numeric, maximal number of parents.
 #'
 #' @return list of lists of matrices.
 #'
 #' @noRd
-find_possible_parent_sets <- function(possible_parents) {
-  pps_mat2list(lapply(possible_parents, comb1))
+find_possible_parent_sets <- function(possible_parents, max_parents) {
+  pps_mat2list(lapply(possible_parents, comb1, max_parents = max_parents))
 }
 
 #' Calculate all possible parent set of a set
 #'
 #' @noRd
-comb1 <- function(vec) {
-  lapply(seq_along(vec), combn_vec, x = vec)
+comb1 <- function(vec, max_parents) {
+  lapply(seq_len(min(length(vec), max_parents)), combn_vec, x = vec)
 }
 
 #' Makes combn work as if the input is always a vector

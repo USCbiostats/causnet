@@ -4,13 +4,15 @@
 \alias{causnet}
 \title{Find globally optimal causal network}
 \usage{
-causnet(data, alpha = 0.05)
+causnet(data, alpha = 0.05, max_parents = 2)
 }
 \arguments{
 \item{data}{A data.frame of numeric variables.}
 
 \item{alpha}{Numerical, p-value threshold to determine cutoff for possible
 parents.}
+
+\item{max_parents}{Numeric, maximal number of parents. Defaults to 2.}
 }
 \value{
 A list with 2 elements: a data data.frame with 3 columns; from, to
