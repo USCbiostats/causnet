@@ -10,10 +10,11 @@
 #' @export
 #'
 #' @examples
+#' set.seed(1)
 #' new_data <- simdat(n_var = 5)
 #' out <- causnet(data = new_data, 0.5)
 #'
-#' netplot_jm(out$network)
+#' netplot_jm(out)
 causnet <- function(data, alpha = 0.05, max_parents = 2) {
 
   if (length(alpha) != 1 || !is.numeric(alpha) || alpha < 0 || alpha > 1) {

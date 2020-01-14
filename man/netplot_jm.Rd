@@ -4,10 +4,10 @@
 \alias{netplot_jm}
 \title{plot network}
 \usage{
-netplot_jm(mylinks)
+netplot_jm(x)
 }
 \arguments{
-\item{mylinks}{data.frame with 3 columns; from, to and component}
+\item{x}{output from `causnet`.}
 }
 \value{
 a plot of the network

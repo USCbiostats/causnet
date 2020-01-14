@@ -1,6 +1,6 @@
 #' plot network
 #'
-#' @param mylinks data.frame with 3 columns; from, to and component
+#' @param x output from `causnet`.
 #'
 #' @return a plot of the network
 #' @importFrom graphics plot
