@@ -21,18 +21,3 @@ ps_score <- function(ps, vertex, data) {
   vapply(ps, function(x) score_bic_lm(vertex, x, data),
          FUN.VALUE = numeric(1))
 }
-
-## Helpers to transter from pps as list of lists of matrices to list of lists
-## of vectors
-ppss2old <- function(ppss, pps) {
-  lapply(seq_along(ppss),
-         function(index) {
-           unname(
-             split(
-               ppss[[index]],
-               rep(seq_along(pps[[index]]),
-                   times = vapply(pps[[index]], ncol, FUN.VALUE = numeric(1)))
-             )
-           )
-         })
-}
