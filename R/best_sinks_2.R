@@ -1,0 +1,117 @@
+find_best_sinks_2 <- function(possible_parents, ms, possible_offspring, pps,
+                              bps, max_parents) {
+  m <- length(possible_parents)
+
+  sinks_tmp <- sink_score_one_node(m, ms)
+  bsinks <- create_sink_list(list(), numeric(), numeric(), numeric(), m)
+
+  for (k in 2:m) {
+    temp_new_rows <- mapply(
+      function(x, y) {
+      wsink_scores_2(x, y, possible_parents,
+                     possible_offspring, pps, bps, m, max_parents)
+      },
+      sinks_tmp$windx[seq_len(attr(sinks_tmp, "index"))],
+      sinks_tmp$wscore[seq_len(attr(sinks_tmp, "index"))],
+      SIMPLIFY = FALSE
+      )
+
+    sinks_tmp <- append_sink_list(
+      sinks_tmp,
+      Reduce(c, lapply(temp_new_rows, function(x) x[["windx"]])),
+      unlist(lapply(temp_new_rows, function(x) x[["k"]])),
+      unlist(lapply(temp_new_rows, function(x) x[["sink"]])),
+      unlist(lapply(temp_new_rows, function(x) x[["wscore"]]))
+    )
+
+    sinks_tmp <- remove_dublicates(sinks_tmp)
+
+    vals <- unique(unlist(lapply(unique(sinks_tmp$windx), max_wscore,
+                                 sinks_tmp = sinks_tmp)))
+
+    bsinks <- append_sink_list(bsinks,
+                               windx = sinks_tmp$windx[vals],
+                               k = sinks_tmp$k[vals],
+                               sink = sinks_tmp$sink[vals],
+                               wscore = sinks_tmp$wscore[vals])
+
+    bsinks <- remove_dublicates(bsinks)
+
+    sinks_tmp <- set_sink_list(
+      sinks_tmp,
+      bsinks$windx[bsinks$k == k],
+      bsinks$k[bsinks$k == k],
+      bsinks$sink[bsinks$k == k],
+      bsinks$wscore[bsinks$k == k]
+    )
+  }
+  bsinks
+}
+
+max_wscore <- function(myw, sinks_tmp) {
+  index <- which(vapply(sinks_tmp$windx, function(x) setequal(x, myw),
+                        FUN.VALUE = logical(1)))
+  index_max <- sinks_tmp$wscore[index] >= max(sinks_tmp$wscore[index])
+  index[index_max]
+}
+
+#' Calculate wsink score
+#'
+#' @details
+#' Given a set w of nodes, compute network scores for all possible sinks of
+#' sets, w1 = {w union v}, where v is a possible offspring of at least one of
+#' the nodes in w. w_networkscore is the score of the best network for w.
+#'
+#' @param w Integer vector, vertices.
+#' @param w_networkscore Numeric, network score.
+#' @param pp List of possible parents. A list of integers, output from
+#'     find_possible_parents.
+#' @param po A list of integers, output from
+#'     find_possible_offspring.
+#' @param @param pps Possible parent sets, output from
+#'     `find_possible_parent_sets`.
+#' @param bps A list of best possible parent set, output from
+#'     `best_possible_parent_sets`.
+#' @param m Numeric, number of variables.
+#'
+#' @return A list with 4 variables, wscore, windx, k, sink.
+#' @noRd
+wsink_scores_2 <- function(w, w_networkscore, pp, po, pps, bps, m, max_parents) {
+
+  # Find possible offspring for w not already in w
+  wpo <- integer()
+  for (v in w) {
+    wpo <- unique(c(wpo, po[[v]][!is.element(po[[v]], w)]))
+  }
+
+  if (length(wpo) > 0) {
+    k <- sink <- wscore <- numeric(length(wpo))
+    windx <- list()
+    # Expand w by one po node, a possible sink, and compute score
+    rowno <- 1
+    for (s in wpo) {
+      s_score <- swscore(s, w, pp, pps, bps, max_parents)[[2]]
+      wscore[rowno] <- s_score + w_networkscore
+      windx[[rowno]] <- c(w, s)
+      k[rowno] <- length(w) + 1
+      sink[rowno] <- s
+      rowno <- rowno + 1
+    }
+  } else {
+    w1sinks <- list(
+      wscore = integer(),
+      windx = list(),
+      k = integer(),
+      sink = integer()
+    )
+    return(w1sinks)
+  }
+
+  w1sinks <- list(
+    wscore = wscore,
+    windx = windx,
+    k = k,
+    sink = sink
+  )
+  return(w1sinks)
+}

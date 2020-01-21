@@ -39,11 +39,6 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps,
 
     sinks_tmp1 <- list()
 
-    ws <- numeric(nrow(sinks_tmp))
-    for (j in seq_len(nrow(sinks_tmp))) {
-      ws[j] <- length(subsetur(m, sinks_tmp[j, "windx"]))
-    }
-
     wscore <- windx <- k <- sink <- numeric(m * m) #find better upper bound
 
     index <- 1
@@ -60,6 +55,7 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps, bps,
       sink[index_subset]   <- w1sinks$sink
       index                <- index + length(index_subset)
     }
+
     sinks_tmp1  <- data.frame(wscore = wscore[seq_len(index - 1)],
                               windx  = windx[seq_len(index - 1)],
                               k      = k[seq_len(index - 1)],
