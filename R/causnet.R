@@ -52,6 +52,8 @@ causnet <- function(data, alpha = 0.05, max_parents = 2) {
   bnsets <- find_best_network(best_sinks[with(best_sinks, order(wscore, sink)),
                               c("windx", "k", "sink", "wscore")], ncol(data))
 
+  bnsets_2 <- find_best_network_2(best_sinks_2)
+
   # network edges and labeled connected components
   out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1,
                    max_parents)

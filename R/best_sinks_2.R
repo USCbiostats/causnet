@@ -45,7 +45,8 @@ find_best_sinks_2 <- function(possible_parents, ms, possible_offspring, pps,
       bsinks$wscore[bsinks$k == k]
     )
   }
-  bsinks
+
+  cut_and_order_sink_list(bsinks)
 }
 
 max_wscore <- function(myw, sinks_tmp) {

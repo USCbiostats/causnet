@@ -27,4 +27,5 @@ BugReports: https://github.com/USCbiostats/causnet/issues
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp
+    Rcpp,
+    purrr
