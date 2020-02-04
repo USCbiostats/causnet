@@ -43,20 +43,16 @@ causnet <- function(data, alpha = 0.05, max_parents = 2) {
 
   # best sinks for all possible connected components
   best_sinks <- find_best_sinks(possible_parents, ms, possible_offspring,
-                         possible_parent_sets, bps1, max_parents)
-
-  best_sinks_2 <- find_best_sinks_2(possible_parents, ms, possible_offspring,
-                                    possible_parent_sets, bps1, max_parents)
+                                possible_parent_sets, bps1, max_parents)
 
   # ordered best sinks for labeled connected components
-  bnsets <- find_best_network(best_sinks[with(best_sinks, order(wscore, sink)),
-                              c("windx", "k", "sink", "wscore")], ncol(data))
-
-  bnsets_2 <- find_best_network_2(best_sinks_2)
+  bnsets <- find_best_network(best_sinks)
 
   # network edges and labeled connected components
-  out1 <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1,
-                   max_parents)
-  names(out1[[1]])[1:2] <- c("from", "to")
-  out1
+  out <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1,
+                  max_parents)
+
+  out[[1]]
+  names(out[[1]])[1:2] <- c("from", "to")
+  out
 }
