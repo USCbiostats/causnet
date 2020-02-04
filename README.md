@@ -9,9 +9,12 @@
 status](https://travis-ci.org/USCbiostats/causnet.svg?branch=master)](https://travis-ci.org/USCbiostats/causnet)
 [![Codecov test
 coverage](https://codecov.io/gh/USCbiostats/causnet/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/causnet?branch=master)
+[![R build
+status](https://github.com/USCbiostats/causnet/workflows/R-CMD-check/badge.svg)](https://github.com/USCbiostats/causnet)
 <!-- badges: end -->
 
-The goal of causnet is to …
+The goal of causnet is to find a globally optimal causal network given
+some data.
 
 ## Installation
 
@@ -44,10 +47,10 @@ links.s = causnet(mydata)
 links.s
 #> $network
 #>   from to component
-#> 1    4  5         1
-#> 2    3  4         1
-#> 3    2  1         1
-#> 4    2  3         1
+#> 1    2  1         1
+#> 2    3  2         1
+#> 3    4  3         1
+#> 4    4  5         1
 #> 
 #> $n_best_parents
 #> [1] 1 1 1 1

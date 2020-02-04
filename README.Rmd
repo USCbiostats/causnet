@@ -46,10 +46,10 @@ library(causnet)
 
 # simulate data
 set.seed(1234)
-mydata = simdat(n_var = 5)
+mydata <- simdat(n_var = 5)
 
 # causnet results
-links.s = causnet(mydata)
+links.s <- causnet(mydata)
 
 links.s
 ```

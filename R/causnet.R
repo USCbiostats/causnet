@@ -10,6 +10,7 @@
 #' @export
 #'
 #' @examples
+#' library(igraph)
 #' set.seed(1)
 #' new_data <- simdat(n_var = 5)
 #' out <- causnet(data = new_data, 0.5)
