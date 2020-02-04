@@ -14,35 +14,43 @@
 #'     indicating number of best parents at each consideration.
 #' @noRd
 sink2net <- function(bnets, pp, pps, bps, max_parents) {
-  m <- length(bps[[1]])
-  nms <- c("node.source", "node.sink", "component")
-  mynets <- as.data.frame(matrix(NA, nrow = 0, ncol = length(nms)))
-  names(mynets) <- nms
-  n_comp <- length(unique(bnets$component))
+
+  # TODO change wscore to component in name only
+  mynets <- data.frame(node.source = numeric(),
+                       node.sink = numeric(),
+                       component = numeric())
+  n_comp <- length(unique(bnets$wscore)) # component
   rowno <- 1
   n_conflicts <- integer()
 
   for (c_index in seq_len(n_comp)) {
-    tmpn <- bnets[is.element(bnets$component, c_index), ]
-    for (k in max(tmpn$k):2) {
+    indexes <- bnets$wscore == c_index
+    for (k in max(bnets$k[indexes]):2) {
       bp_set <- NULL
-      tmp <- tmpn[is.element(tmpn$k, k), ]
-      s <- tmp[1, "sink"]
-      w <- subsetur(m, tmp[1, "windx"])
-      bp_set <- swscore(s, w, pp, pps, bps, max_parents)[[1]]
-      if (!is.null(bp_set[[1]])) {
-        src <- bp_set
-        n_conflicts <- c(n_conflicts, length(src[[1]]))
-        # Sampling 1 best sink at random
-        src[[1]] <- src[[1]][sample.int(length(src[[1]]), 1)]
+      tmp <- which(indexes)[bnets$k[indexes] == k]
+      if(length(tmp) == 0) break
 
-        snk <- rep(s, length(bp_set))
-        cmp <- rep(c_index, length(bp_set))
-        mynets[rowno:(rowno + length(bp_set) - 1), ] <- cbind(src, snk, cmp)
-        rowno <- rowno + length(bp_set)
-      }
+      s <- bnets$sink[tmp][[1]]
+      w <- bnets$windx[tmp][[1]]
+
+      if (is.null(w)) next
+      bp_set <- swscore(s, w, pp, pps, bps, max_parents)[[1]]
+
+      if (is.null(bp_set[[1]])) next
+      if (any(is.infinite(bp_set))) next
+
+      src <- bp_set
+      n_conflicts <- c(n_conflicts, length(src[[1]]))
+      # Sampling 1 best sink at random
+      src[[1]] <- src[[1]][sample.int(length(src[[1]]), 1)]
+      snk <- rep(s, length(bp_set))
+      cmp <- rep(c_index, length(bp_set))
+      mynets[rowno:(rowno + length(bp_set) - 1), ] <- cbind(src, snk, cmp)
+      rowno <- rowno + length(bp_set)
+
     }
   }
+
   list(network = mynets,
        n_best_parents = n_conflicts)
 }
