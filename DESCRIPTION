@@ -24,8 +24,5 @@ Suggests:
     covr
 URL: https://github.com/USCbiostats/causnet
 BugReports: https://github.com/USCbiostats/causnet/issues
-LinkingTo: 
-    Rcpp
 Imports: 
-    Rcpp,
     purrr
