@@ -42,9 +42,9 @@ append_sink_list <- function(sink_list, windx, k, sink, wscore) {
 }
 
 remove_dublicates <- function(sink_list) {
-  keeps <- which(!duplicated(lapply(sink_list$windx, sort)))
+  keeps <- which(!duplicated(map(sink_list$windx, sort)))
 
-  sink_list$windx <- lapply(sink_list$windx[keeps], sort)
+  sink_list$windx <- map(sink_list$windx[keeps], sort)
   sink_list$k[seq_along(keeps)] <- sink_list$k[keeps]
   sink_list$sink[seq_along(keeps)] <- sink_list$sink[keeps]
   sink_list$wscore[seq_along(keeps)] <- sink_list$wscore[keeps]

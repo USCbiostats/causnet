@@ -11,15 +11,16 @@
 #' @return list of lists of matrices.
 #'
 #' @noRd
+#' @importFrom purrr map
 find_possible_parent_sets <- function(possible_parents, max_parents) {
-  pps_mat2list(lapply(possible_parents, comb1, max_parents = max_parents))
+  pps_mat2list(map(possible_parents, comb1, max_parents = max_parents))
 }
 
 #' Calculate all possible parent set of a set
 #'
 #' @noRd
 comb1 <- function(vec, max_parents) {
-  lapply(seq_len(min(length(vec), max_parents)), combn_vec, x = vec)
+  map(seq_len(min(length(vec), max_parents)), combn_vec, x = vec)
 }
 
 #' Makes combn work as if the input is always a vector
@@ -34,13 +35,13 @@ combn_vec <- function(n, x) {
 }
 
 ps2list <- function(ps) {
-  Reduce(c, lapply(ps, mat2list))
+  purrr::reduce(map(ps, mat2list), c)
 }
 
 mat2list <- function(mat) {
-  lapply(seq_len(ncol(mat)), function(x) mat[, x])
+  map(seq_len(ncol(mat)), ~mat[, .x])
 }
 
 pps_mat2list <- function(pps) {
-  lapply(pps, ps2list)
+  map(pps, ps2list)
 }

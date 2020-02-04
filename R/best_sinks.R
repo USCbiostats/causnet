@@ -25,28 +25,28 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps,
   bsinks <- create_sink_list(list(), numeric(), numeric(), numeric(), m)
 
   for (k in 2:m) {
-    temp_new_rows <- mapply(
-      function(x, y) {
-        wsink_scores(x, y, possible_parents,
-                     possible_offspring, pps, bps, m, max_parents)
-      },
-      sinks_tmp$windx[seq_len(attr(sinks_tmp, "index"))],
-      sinks_tmp$wscore[seq_len(attr(sinks_tmp, "index"))],
-      SIMPLIFY = FALSE
-    )
+    temp_new_rows <- map2(
+      .x = sinks_tmp$windx[seq_len(attr(sinks_tmp, "index"))],
+      .y = sinks_tmp$wscore[seq_len(attr(sinks_tmp, "index"))],
+      .f = ~ wsink_scores(.x, .y, possible_parents, possible_offspring, pps,
+                          bps, m, max_parents)
+      )
 
     sinks_tmp <- append_sink_list(
       sinks_tmp,
-      Reduce(c, lapply(temp_new_rows, function(x) x[["windx"]])),
-      unlist(lapply(temp_new_rows, function(x) x[["k"]])),
-      unlist(lapply(temp_new_rows, function(x) x[["sink"]])),
-      unlist(lapply(temp_new_rows, function(x) x[["wscore"]]))
+      purrr::flatten(purrr::map(temp_new_rows, "windx")),
+      purrr::flatten_dbl(purrr::map(temp_new_rows, "k")),
+      purrr::flatten_dbl(purrr::map(temp_new_rows, "sink")),
+      purrr::flatten_dbl(purrr::map(temp_new_rows, "wscore"))
     )
 
     sinks_tmp <- remove_dublicates(sinks_tmp)
 
-    vals <- unique(unlist(lapply(unique(sinks_tmp$windx), max_wscore,
-                                 sinks_tmp = sinks_tmp)))
+    vals <- unique(
+      unlist(
+        map(unique(sinks_tmp$windx), ~max_wscore(.x, sinks_tmp))
+        )
+      )
 
     bsinks <- append_sink_list(bsinks,
                                windx = sinks_tmp$windx[vals],
@@ -92,7 +92,7 @@ swscore <- function(s, w, pp, pps, bps, max_parents) {
   if (length(pset) > max_parents) {
     return(list(Inf, Inf))
   }
-  aa <- vapply(pps[[s]], function(x) setequal(x, pset), FUN.VALUE = logical(1))
+  aa <- map_lgl(pps[[s]], ~setequal(.x, pset))
 
   out <- vector("list", 2)
   out[[1]] <- bps[[1]][[s]][aa][[1]]
@@ -161,11 +161,8 @@ wsink_scores <- function(w, w_networkscore, pp, po, pps, bps, m, max_parents) {
   return(w1sinks)
 }
 
-
 max_wscore <- function(myw, sinks_tmp) {
-  index <- which(vapply(sinks_tmp$windx, function(x) setequal(x, myw),
-                        FUN.VALUE = logical(1)))
+  index <- which(map_lgl(sinks_tmp$windx, ~setequal(.x, myw)))
   index_max <- sinks_tmp$wscore[index] >= max(sinks_tmp$wscore[index])
   index[index_max]
 }
-
