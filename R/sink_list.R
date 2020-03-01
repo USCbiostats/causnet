@@ -1,11 +1,11 @@
 create_sink_list <- function(windx, k, sink, wscore, m) {
-
   length_out <-  m * m * 2
 
-  out <- list(windx  = list(),
-              k      = numeric(length_out),
-              sink   = numeric(length_out),
-              wscore = numeric(length_out))
+  out <- new.env()
+  out$windx  = list()
+  out$k       = numeric(length_out)
+  out$sink   = numeric(length_out)
+  out$wscore = numeric(length_out)
   attr(out, "m") <- m
   attr(out, "length") <- length_out
   attr(out, "index") <- length(k)
