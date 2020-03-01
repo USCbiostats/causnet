@@ -23,7 +23,8 @@ find_possible_parents <- function(data, alpha) {
   for (vertex in seq_len(n_var)) {
     for (parent in seq_len(n_var)) {
       if (parent != vertex) {
-        p_value <- stats::cor.test(data[, vertex], data[, parent])$p.value
+        p_value <- stats::cor.test(data[, vertex, drop = TRUE],
+                                   data[, parent, drop = TRUE])$p.value
         if (p_value < alpha) out[[vertex]] <- c(out[[vertex]], parent)
       }
     }

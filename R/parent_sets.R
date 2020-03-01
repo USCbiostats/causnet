@@ -35,7 +35,7 @@ combn_vec <- function(n, x) {
 }
 
 ps2list <- function(ps) {
-  purrr::reduce(map(ps, mat2list), c)
+  purrr::reduce(map(ps, mat2list), c, .init = list())
 }
 
 mat2list <- function(mat) {
