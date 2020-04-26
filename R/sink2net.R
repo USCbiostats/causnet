@@ -36,18 +36,15 @@ sink2net <- function(bnets, pp, pps, bps, max_parents) {
       if (is.null(w)) next
       bp_set <- swscore(s, w, pp, pps, bps, max_parents)[[1]]
 
-      if (is.null(bp_set[[1]])) next
+      if (is.null(bp_set)) next
       if (any(is.infinite(bp_set))) next
 
       src <- bp_set
-      n_conflicts <- c(n_conflicts, length(src[[1]]))
+      n_conflicts <- c(n_conflicts, length(src))
       # Sampling 1 best sink at random
-      src[[1]] <- src[[1]][sample.int(length(src[[1]]), 1)]
-      snk <- rep(s, length(bp_set))
-      cmp <- rep(c_index, length(bp_set))
-      mynets[rowno:(rowno + length(bp_set) - 1), ] <- cbind(src, snk, cmp)
-      rowno <- rowno + length(bp_set)
-
+      src <- src[sample.int(length(src), 1)]
+      mynets[rowno, ] <- cbind(src, s, c_index)
+      rowno <- rowno + 1
     }
   }
 
