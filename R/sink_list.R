@@ -42,7 +42,17 @@ append_sink_list <- function(sink_list, windx, k, sink, wscore) {
 }
 
 remove_dublicates <- function(sink_list) {
-  keeps <- which(!duplicated(map(sink_list$windx, sort)))
+  values <- purrr::map2_chr(
+    sink_list$windx,
+    sink_list$sink[seq_len(attr(sink_list, "index"))],
+    ~ paste0(paste(sort(.x), collapse = "-"), "_", .y)
+    )
+
+  dups <- duplicated(values)
+
+  if (all(!dups)) return(sink_list)
+
+  keeps <- which(!duplicated(values))
 
   sink_list$windx <- map(sink_list$windx[keeps], sort)
   sink_list$k[seq_along(keeps)] <- sink_list$k[keeps]
