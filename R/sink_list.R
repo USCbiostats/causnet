@@ -1,5 +1,5 @@
 create_sink_list <- function(windx, k, sink, wscore, m) {
-  length_out <-  m * m * 2
+  length_out <-  m ^ 4
 
   out <- new.env()
   out$windx  = list()
