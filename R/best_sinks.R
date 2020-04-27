@@ -46,11 +46,7 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps,
     )
 
     # For each w in sinks_tmp1, find best sinks
-    vals <- unique(
-      unlist(
-        map(unique(sinks_tmp1$windx), ~ max_wscore(.x, sinks_tmp1))
-        )
-      )
+    vals <- max_wscore(sinks_tmp1)
 
     bsinks <- append_sink_list(bsinks,
                                windx = sinks_tmp1$windx[vals],
@@ -165,8 +161,16 @@ wsink_scores <- function(w, w_networkscore, pp, po, pps, bps, m, max_parents) {
   return(w1sinks)
 }
 
-max_wscore <- function(myw, sinks_tmp) {
-  index <- which(map_lgl(sinks_tmp$windx, ~setequal(.x, myw)))
-  index_max <- sinks_tmp$wscore[index] >= max(sinks_tmp$wscore[index])
-  index[index_max]
+max_wscore <- function(sinks_tmp) {
+  new_vals <- split(
+      seq_along(sinks_tmp$windx),
+      purrr::map_chr(sinks_tmp$windx, ~ paste(sort(.x), collapse = ""))
+    )
+  unique(unlist(lapply(new_vals, give_back_max, sinks_tmp$wscore)))
 }
+
+give_back_max <- function(index, x) {
+  www <- max(x[index]) <= x[index]
+  index[www]
+}
+
