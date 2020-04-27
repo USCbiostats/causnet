@@ -1,0 +1,65 @@
+---
+title: "How to use the score_fun argument"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{score_fun-argument}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(causnet)
+set.seed(1234)
+```
+
+`causnet()` can be run without setting the argument `score_fun`. In that case `causnet:::score_bic_lm` is used as the default.
+
+```{r}
+mydata <- simdat(n_var = 5)
+causnet(data = mydata, max_parents = 3)
+```
+
+The Default scoring function is `score_bic_lm()` which is formulated as follows: 
+
+```{r}
+score_bic_lm <- function(y, x, mydat) {
+  y_nm <- colnames(mydat)[y]
+  if (is.element(x[1], seq_len(ncol(mydat)))) {
+    x_nms <- colnames(mydat)[x]
+  } else {
+    x_nms <- "1"
+  }
+  fit <- lm(paste0(y_nm, " ~ ", paste(x_nms, collapse = " + ")), data = mydat)
+  bic <- - (1 / 2) * BIC(fit)
+  return(bic)
+}
+```
+
+If you want to specify your own scoring you need to create a function that takes 3 arguments and returns a single numeric. Bigger values are better score for node y and parents x.
+
+The first argument is passed in will be a single integer denoting the index of the response variable in the data. The second argument is a vector of integer denoting the dependant variables. Note that this can be `NA` if there are not dependant variables.
+And the last argument is the `data`.
+
+Suppose we want a score function that gives back the average correlation between `y` and `x`. 
+This score function can be written as follows. Notice that we are handling the special case where `x = NA`.
+```{r}
+mean_cor_score <- function(y, x, mydat) {
+  if (any(is.na(x))) return(0)
+  
+  mean(cor(mydat[x], mydat[y]))
+}
+```
+
+Now we simply pass our custom scoring function to `score_fun` and run
+
+```{r}
+causnet(data = mydata, max_parents = 3, score_fun = mean_cor_score)
+```
+
