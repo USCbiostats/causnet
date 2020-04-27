@@ -13,10 +13,10 @@ data_list <- append_sink_list(data_list,
              -856.876146916413, -856.964434738934, -856.964434738934)
 )
 
-test_that("remove_dublicates works as intended", {
+test_that("remove_duplicates works as intended", {
 
   expect_equal(
-   as.list(remove_dublicates(data_list)),
+   as.list(remove_duplicates(data_list)),
   list(
        sink = c(2, 1, 3, 4, 2, 4, 2, 3, 5, 4,
                 rep(0, attr(data_list, "length") - 10)),

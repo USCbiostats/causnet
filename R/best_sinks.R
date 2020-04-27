@@ -54,7 +54,7 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps,
                                sink = sinks_tmp1$sink[vals],
                                wscore = sinks_tmp1$wscore[vals])
 
-    bsinks <- remove_dublicates(bsinks)
+    bsinks <- remove_duplicates(bsinks)
 
     sinks_tmp <- set_sink_list(
       sinks_tmp,

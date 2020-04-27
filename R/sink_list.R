@@ -41,7 +41,7 @@ append_sink_list <- function(sink_list, windx, k, sink, wscore) {
   sink_list
 }
 
-remove_dublicates <- function(sink_list) {
+remove_duplicates <- function(sink_list) {
   values <- purrr::map2_chr(
     sink_list$windx,
     sink_list$sink[seq_len(attr(sink_list, "index"))],
