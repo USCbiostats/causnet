@@ -40,6 +40,8 @@ find_best_network <- function(bsinks) {
     for (d in wlen:2) {
       aa <- which(purrr::map_lgl(bsinks$windx, ~ identical(.x, w1)))
 
+      if(length(aa) == 0) break
+
       bestnets <- append_sink_list(bestnets,
                                    bsinks$windx[aa[1]],
                                    bsinks$k[aa[1]],

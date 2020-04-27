@@ -4,7 +4,7 @@
 \alias{causnet}
 \title{Find globally optimal causal network}
 \usage{
-causnet(data, alpha = 0.05, max_parents = 2)
+causnet(data, alpha = 0.05, max_parents = 2, score_fun = NULL)
 }
 \arguments{
 \item{data}{A data.frame of numeric variables.}
@@ -13,6 +13,9 @@ causnet(data, alpha = 0.05, max_parents = 2)
 parents.}
 
 \item{max_parents}{Numeric, maximal number of parents. Defaults to 2.}
+
+\item{score_fun}{A function used for scoring parent sets. For more details
+see score_fun vignette.}
 }
 \value{
 A list with 2 elements: a data data.frame with 3 columns; from, to

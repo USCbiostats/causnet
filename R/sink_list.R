@@ -1,5 +1,5 @@
 create_sink_list <- function(windx, k, sink, wscore, m) {
-  length_out <-  m * m * 2
+  length_out <-  m ^ 4
 
   out <- new.env()
   out$windx  = list()
@@ -41,8 +41,18 @@ append_sink_list <- function(sink_list, windx, k, sink, wscore) {
   sink_list
 }
 
-remove_dublicates <- function(sink_list) {
-  keeps <- which(!duplicated(map(sink_list$windx, sort)))
+remove_duplicates <- function(sink_list) {
+  values <- purrr::map2_chr(
+    sink_list$windx,
+    sink_list$sink[seq_len(attr(sink_list, "index"))],
+    ~ paste0(paste(sort(.x), collapse = "-"), "_", .y)
+    )
+
+  dups <- duplicated(values)
+
+  if (all(!dups)) return(sink_list)
+
+  keeps <- which(!duplicated(values))
 
   sink_list$windx <- map(sink_list$windx[keeps], sort)
   sink_list$k[seq_along(keeps)] <- sink_list$k[keeps]

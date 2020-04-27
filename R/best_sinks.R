@@ -21,10 +21,15 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps,
                               bps, max_parents) {
   m <- length(possible_parents)
 
-  sinks_tmp <- sink_score_one_node(m, ms)
   bsinks <- create_sink_list(list(), numeric(), numeric(), numeric(), m)
 
+  # best sinks and scores for subnetworks of one node, which is the node itself
+  # and its score
+  sinks_tmp <- sink_score_one_node(m, ms)
+
   for (k in 2:m) {
+    sinks_tmp1 <- create_sink_list(list(), numeric(), numeric(), numeric(), m)
+
     temp_new_rows <- map2(
       .x = sinks_tmp$windx[seq_len(attr(sinks_tmp, "index"))],
       .y = sinks_tmp$wscore[seq_len(attr(sinks_tmp, "index"))],
@@ -32,29 +37,24 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps,
                           bps, m, max_parents)
       )
 
-    sinks_tmp <- append_sink_list(
-      sinks_tmp,
+    sinks_tmp1 <- append_sink_list(
+      sinks_tmp1,
       purrr::flatten(purrr::map(temp_new_rows, "windx")),
       purrr::flatten_dbl(purrr::map(temp_new_rows, "k")),
       purrr::flatten_dbl(purrr::map(temp_new_rows, "sink")),
       purrr::flatten_dbl(purrr::map(temp_new_rows, "wscore"))
     )
 
-    sinks_tmp <- remove_dublicates(sinks_tmp)
-
-    vals <- unique(
-      unlist(
-        map(unique(sinks_tmp$windx), ~max_wscore(.x, sinks_tmp))
-        )
-      )
+    # For each w in sinks_tmp1, find best sinks
+    vals <- max_wscore(sinks_tmp1)
 
     bsinks <- append_sink_list(bsinks,
-                               windx = sinks_tmp$windx[vals],
-                               k = sinks_tmp$k[vals],
-                               sink = sinks_tmp$sink[vals],
-                               wscore = sinks_tmp$wscore[vals])
+                               windx = sinks_tmp1$windx[vals],
+                               k = sinks_tmp1$k[vals],
+                               sink = sinks_tmp1$sink[vals],
+                               wscore = sinks_tmp1$wscore[vals])
 
-    bsinks <- remove_dublicates(bsinks)
+    bsinks <- remove_duplicates(bsinks)
 
     sinks_tmp <- set_sink_list(
       sinks_tmp,
@@ -65,7 +65,7 @@ find_best_sinks <- function(possible_parents, ms, possible_offspring, pps,
     )
   }
 
-  cut_and_order_sink_list(bsinks)
+  bsinks
 }
 
 
@@ -161,8 +161,16 @@ wsink_scores <- function(w, w_networkscore, pp, po, pps, bps, m, max_parents) {
   return(w1sinks)
 }
 
-max_wscore <- function(myw, sinks_tmp) {
-  index <- which(map_lgl(sinks_tmp$windx, ~setequal(.x, myw)))
-  index_max <- sinks_tmp$wscore[index] >= max(sinks_tmp$wscore[index])
-  index[index_max]
+max_wscore <- function(sinks_tmp) {
+  new_vals <- split(
+      seq_along(sinks_tmp$windx),
+      purrr::map_chr(sinks_tmp$windx, ~ paste(sort(.x), collapse = ""))
+    )
+  unique(unlist(lapply(new_vals, give_back_max, sinks_tmp$wscore)))
 }
+
+give_back_max <- function(index, x) {
+  www <- max(x[index]) <= x[index]
+  index[www]
+}
+
