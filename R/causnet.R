@@ -56,7 +56,11 @@ causnet <- function(data, alpha = 0.05, max_parents = 2, score_fun = NULL) {
   out <- sink2net(bnsets, possible_parents, possible_parent_sets, bps1,
                   max_parents)
 
-  out[[1]]
+  out[["mutliple_networks"]] <- list(bnsets = bnsets,
+                                     possible_parents = possible_parents,
+                                     possible_parent_sets = possible_parent_sets,
+                                     bps1 = bps1,
+                                     max_parents = max_parents)
   names(out[[1]])[1:2] <- c("from", "to")
   out
 }

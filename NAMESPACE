@@ -2,6 +2,8 @@
 
 export(causnet)
 export(netplot_jm)
+export(return_all_best_networks)
+export(return_random_best_networks)
 export(simdat)
 export(subsetr)
 export(subsetur)
