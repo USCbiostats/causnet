@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 # causnet
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/USCbiostats/causnet.svg?branch=master)](https://travis-ci.org/USCbiostats/causnet)
 [![Codecov test coverage](https://codecov.io/gh/USCbiostats/causnet/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/causnet?branch=master)
 [![R build status](https://github.com/USCbiostats/causnet/workflows/R-CMD-check/badge.svg)](https://github.com/USCbiostats/causnet/actions)
 <!-- badges: end -->

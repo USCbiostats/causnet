@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/USCbiostats/causnet.svg?branch=master)](https://travis-ci.org/USCbiostats/causnet)
 [![Codecov test
 coverage](https://codecov.io/gh/USCbiostats/causnet/branch/master/graph/badge.svg)](https://codecov.io/gh/USCbiostats/causnet?branch=master)
 [![R build
@@ -59,7 +57,7 @@ links.s
 #> 
 #> $mutliple_networks
 #> $mutliple_networks$bnsets
-#> <environment: 0x7f9fa41cfcd8>
+#> <environment: 0x7f9b993415a8>
 #> attr(,"m")
 #> [1] 5
 #> attr(,"length")
