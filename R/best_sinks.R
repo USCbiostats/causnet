@@ -92,7 +92,7 @@ swscore <- function(s, w, pp, pps, bps, max_parents) {
   if (length(pset) > max_parents) {
     return(list(Inf, Inf))
   }
-  aa <- map_lgl(pps[[s]], ~setequal(.x, pset))
+  aa <- list_setequal(lapply(pps[[s]], sort), sort(pset))
 
   out <- vector("list", 2)
   out[[1]] <- bps[[1]][[s]][aa][[1]]
