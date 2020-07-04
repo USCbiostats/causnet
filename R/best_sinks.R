@@ -152,11 +152,12 @@ wsink_scores <- function(w, w_networkscore, pp, po, pps, bps, m, max_parents) {
     return(w1sinks)
   }
 
+  infinite_exclusions <- !is.infinite(wscore)
   w1sinks <- list(
-    wscore = wscore,
-    windx = windx,
-    k = k,
-    sink = sink
+    wscore = wscore[infinite_exclusions],
+    windx = windx[infinite_exclusions],
+    k = k[infinite_exclusions],
+    sink = sink[infinite_exclusions]
   )
   return(w1sinks)
 }
