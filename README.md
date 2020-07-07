@@ -57,7 +57,7 @@ links.s
 #> 
 #> $mutliple_networks
 #> $mutliple_networks$bnsets
-#> <environment: 0x7f9b993415a8>
+#> <environment: 0x7fe79a8ac918>
 #> attr(,"m")
 #> [1] 5
 #> attr(,"length")
@@ -314,6 +314,292 @@ links.s
 #> 
 #> $mutliple_networks$bps1[[2]][[5]][[3]]
 #> [1] -414.4274
+#> 
+#> 
+#> 
+#> 
+#> $mutliple_networks$max_parents
+#> [1] 2
+```
+
+### using BGE scoring function
+
+To use he a BGE scoring function simply pass thr `score_bge()` to the
+`score_fun` argument.
+
+``` r
+causnet(mydata, score_fun = score_bge)
+#> $network
+#>   from to component
+#> 1    3  5         1
+#> 2    3  4         1
+#> 3    1  3         1
+#> 4    1  2         1
+#> 5    4  5         2
+#> 6    3  4         2
+#> 
+#> $n_best_parents
+#> [1] 2 1 2 1 2 1
+#> 
+#> $mutliple_networks
+#> $mutliple_networks$bnsets
+#> <environment: 0x7fe77bc9f418>
+#> attr(,"m")
+#> [1] 5
+#> attr(,"length")
+#> [1] 625
+#> attr(,"index")
+#> [1] 6
+#> 
+#> $mutliple_networks$possible_parents
+#> $mutliple_networks$possible_parents[[1]]
+#> [1] 2 3
+#> 
+#> $mutliple_networks$possible_parents[[2]]
+#> [1] 1 3
+#> 
+#> $mutliple_networks$possible_parents[[3]]
+#> [1] 1 2 4 5
+#> 
+#> $mutliple_networks$possible_parents[[4]]
+#> [1] 3 5
+#> 
+#> $mutliple_networks$possible_parents[[5]]
+#> [1] 3 4
+#> 
+#> 
+#> $mutliple_networks$possible_parent_sets
+#> $mutliple_networks$possible_parent_sets[[1]]
+#> $mutliple_networks$possible_parent_sets[[1]][[1]]
+#> [1] 2
+#> 
+#> $mutliple_networks$possible_parent_sets[[1]][[2]]
+#> [1] 3
+#> 
+#> $mutliple_networks$possible_parent_sets[[1]][[3]]
+#> [1] 2 3
+#> 
+#> 
+#> $mutliple_networks$possible_parent_sets[[2]]
+#> $mutliple_networks$possible_parent_sets[[2]][[1]]
+#> [1] 1
+#> 
+#> $mutliple_networks$possible_parent_sets[[2]][[2]]
+#> [1] 3
+#> 
+#> $mutliple_networks$possible_parent_sets[[2]][[3]]
+#> [1] 1 3
+#> 
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]]
+#> $mutliple_networks$possible_parent_sets[[3]][[1]]
+#> [1] 1
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[2]]
+#> [1] 2
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[3]]
+#> [1] 4
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[4]]
+#> [1] 5
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[5]]
+#> [1] 1 2
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[6]]
+#> [1] 1 4
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[7]]
+#> [1] 1 5
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[8]]
+#> [1] 2 4
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[9]]
+#> [1] 2 5
+#> 
+#> $mutliple_networks$possible_parent_sets[[3]][[10]]
+#> [1] 4 5
+#> 
+#> 
+#> $mutliple_networks$possible_parent_sets[[4]]
+#> $mutliple_networks$possible_parent_sets[[4]][[1]]
+#> [1] 3
+#> 
+#> $mutliple_networks$possible_parent_sets[[4]][[2]]
+#> [1] 5
+#> 
+#> $mutliple_networks$possible_parent_sets[[4]][[3]]
+#> [1] 3 5
+#> 
+#> 
+#> $mutliple_networks$possible_parent_sets[[5]]
+#> $mutliple_networks$possible_parent_sets[[5]][[1]]
+#> [1] 3
+#> 
+#> $mutliple_networks$possible_parent_sets[[5]][[2]]
+#> [1] 4
+#> 
+#> $mutliple_networks$possible_parent_sets[[5]][[3]]
+#> [1] 3 4
+#> 
+#> 
+#> 
+#> $mutliple_networks$bps1
+#> $mutliple_networks$bps1[[1]]
+#> $mutliple_networks$bps1[[1]][[1]]
+#> $mutliple_networks$bps1[[1]][[1]][[1]]
+#> [1] 2
+#> 
+#> $mutliple_networks$bps1[[1]][[1]][[2]]
+#> [1] 3
+#> 
+#> $mutliple_networks$bps1[[1]][[1]][[3]]
+#> [1] 2 3
+#> 
+#> 
+#> $mutliple_networks$bps1[[1]][[2]]
+#> $mutliple_networks$bps1[[1]][[2]][[1]]
+#> [1] 1
+#> 
+#> $mutliple_networks$bps1[[1]][[2]][[2]]
+#> [1] 3
+#> 
+#> $mutliple_networks$bps1[[1]][[2]][[3]]
+#> [1] 1 3
+#> 
+#> 
+#> $mutliple_networks$bps1[[1]][[3]]
+#> $mutliple_networks$bps1[[1]][[3]][[1]]
+#> [1] 1
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[2]]
+#> [1] 2
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[3]]
+#> [1] 4
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[4]]
+#> [1] 5
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[5]]
+#> [1] 1 2
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[6]]
+#> [1] 1 4
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[7]]
+#> [1] 1 5
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[8]]
+#> [1] 2 4
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[9]]
+#> [1] 2 5
+#> 
+#> $mutliple_networks$bps1[[1]][[3]][[10]]
+#> [1] 4 5
+#> 
+#> 
+#> $mutliple_networks$bps1[[1]][[4]]
+#> $mutliple_networks$bps1[[1]][[4]][[1]]
+#> [1] 3
+#> 
+#> $mutliple_networks$bps1[[1]][[4]][[2]]
+#> [1] 5
+#> 
+#> $mutliple_networks$bps1[[1]][[4]][[3]]
+#> [1] 3 5
+#> 
+#> 
+#> $mutliple_networks$bps1[[1]][[5]]
+#> $mutliple_networks$bps1[[1]][[5]][[1]]
+#> [1] 3
+#> 
+#> $mutliple_networks$bps1[[1]][[5]][[2]]
+#> [1] 4
+#> 
+#> $mutliple_networks$bps1[[1]][[5]][[3]]
+#> [1] 3 4
+#> 
+#> 
+#> 
+#> $mutliple_networks$bps1[[2]]
+#> $mutliple_networks$bps1[[2]][[1]]
+#> $mutliple_networks$bps1[[2]][[1]][[1]]
+#> [1] 850.5602
+#> 
+#> $mutliple_networks$bps1[[2]][[1]][[2]]
+#> [1] 865.0927
+#> 
+#> $mutliple_networks$bps1[[2]][[1]][[3]]
+#> [1] 1286.373
+#> 
+#> 
+#> $mutliple_networks$bps1[[2]][[2]]
+#> $mutliple_networks$bps1[[2]][[2]][[1]]
+#> [1] 850.5602
+#> 
+#> $mutliple_networks$bps1[[2]][[2]][[2]]
+#> [1] 848.8113
+#> 
+#> $mutliple_networks$bps1[[2]][[2]][[3]]
+#> [1] 1270.092
+#> 
+#> 
+#> $mutliple_networks$bps1[[2]][[3]]
+#> $mutliple_networks$bps1[[2]][[3]][[1]]
+#> [1] 865.0927
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[2]]
+#> [1] 848.8113
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[3]]
+#> [1] 856.417
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[4]]
+#> [1] 865.1501
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[5]]
+#> [1] 1284.624
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[6]]
+#> [1] 1290.44
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[7]]
+#> [1] 1298.034
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[8]]
+#> [1] 1274.978
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[9]]
+#> [1] 1282.773
+#> 
+#> $mutliple_networks$bps1[[2]][[3]][[10]]
+#> [1] 1292.077
+#> 
+#> 
+#> $mutliple_networks$bps1[[2]][[4]]
+#> $mutliple_networks$bps1[[2]][[4]][[1]]
+#> [1] 856.417
+#> 
+#> $mutliple_networks$bps1[[2]][[4]][[2]]
+#> [1] 848.1585
+#> 
+#> $mutliple_networks$bps1[[2]][[4]][[3]]
+#> [1] 1275.086
+#> 
+#> 
+#> $mutliple_networks$bps1[[2]][[5]]
+#> $mutliple_networks$bps1[[2]][[5]][[1]]
+#> [1] 865.1501
+#> 
+#> $mutliple_networks$bps1[[2]][[5]][[2]]
+#> [1] 848.1585
+#> 
+#> $mutliple_networks$bps1[[2]][[5]][[3]]
+#> [1] 1283.819
 #> 
 #> 
 #> 

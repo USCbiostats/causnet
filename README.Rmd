@@ -53,6 +53,15 @@ links.s <- causnet(mydata)
 links.s
 ```
 
+### using BGE scoring function
+
+To use he a BGE scoring function simply pass thr `score_bge()` to the `score_fun` argument.
+
+```{r}
+causnet(mydata, score_fun = score_bge)
+```
+
+
 ## Code of Conduct
   
   Please note that the causnet project is released with a [Contributor Code of Conduct](https://contributor-covenant.org/version/1/0/0/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
