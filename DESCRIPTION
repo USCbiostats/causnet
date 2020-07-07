@@ -17,7 +17,7 @@ Description: What the package does (one paragraph).
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0.9000
+RoxygenNote: 7.1.1
 Suggests: 
     igraph,
     testthat (>= 2.1.0),
@@ -28,7 +28,8 @@ URL: https://github.com/USCbiostats/causnet
 BugReports: https://github.com/USCbiostats/causnet/issues
 Imports: 
     purrr,
-    Rcpp
+    Rcpp,
+    bnlearn
 VignetteBuilder: knitr
 LinkingTo: 
     Rcpp
