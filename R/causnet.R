@@ -62,5 +62,6 @@ causnet <- function(data, alpha = 0.05, max_parents = 2, score_fun = NULL) {
                                      bps1 = bps1,
                                      max_parents = max_parents)
   names(out[[1]])[1:2] <- c("from", "to")
+  class(out) <- "causnet"
   out
 }
