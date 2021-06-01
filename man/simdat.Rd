@@ -4,12 +4,12 @@
 \alias{simdat}
 \title{Simulate example data}
 \usage{
-simdat(sample.size = 300, n.var = 5, beta = 0.3)
+simdat(sample.size = 300, n_var = 5, beta = 0.3)
 }
 \arguments{
 \item{sample.size}{integer, number of observations}
 
-\item{n.var}{integer, number of variables}
+\item{n_var}{integer, number of variables}
 
 \item{beta}{numeric, amount of correlation
 

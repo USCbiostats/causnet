@@ -35,7 +35,7 @@ set.seed(1234)
 mydata = simdat(n.var = 5)
 
 # causnet results
-links.s = sfun(mydata)
+links.s = sfun(mydata, alpha = 1)
 
 links.s
 #>   from to component
@@ -56,4 +56,3 @@ netplot_jm(links.s)
 #>     union
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />

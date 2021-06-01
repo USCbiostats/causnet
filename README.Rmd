@@ -43,14 +43,13 @@ library(causnet)
 
 # simulate data
 set.seed(1234)
-mydata = simdat(n.var = 5)
-
+mydata = simdat(n_var = 5)
 # causnet results
-links.s = sfun(mydata)
+links.s = sfun(mydata, alpha = 1)
+links.s[[1]]
 
-links.s
 
-netplot_jm(links.s)
+netplot_jm(links.s[[1]])
 ```
 
 

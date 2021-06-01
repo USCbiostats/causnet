@@ -4,10 +4,22 @@
 \alias{sfun}
 \title{Main function}
 \usage{
-sfun(mydata)
+sfun(
+  mydata,
+  alpha = 0.01,
+  genes,
+  surdata = NULL,
+  scoreFn = "bic",
+  pheno = FALSE,
+  alpha1 = 0.01,
+  alpha2 = 0.01,
+  pp = NULL
+)
 }
 \arguments{
 \item{mydata}{data.frame}
+
+\item{surdata}{data.frame}
 }
 \value{
 data.frame with 3 columns; from, to and component
