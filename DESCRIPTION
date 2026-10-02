@@ -1,6 +1,6 @@
 Package: causnet
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Bayesian Network Structure Learning by Dynamic Programming
+Version: 0.1.0.9000
 Authors@R: c(
  person(
     given = "Joshua", 
@@ -12,12 +12,33 @@ Authors@R: c(
     family = "Hvitfeldt",
     role = c("aut", "cre"),
     email = "emilhhvitfeldt@gmail.com",
-    comment = c(ORCID = "0000-0002-0679-1945")))
-Description: What the package does (one paragraph).
+    comment = c(ORCID = "0000-0002-0679-1945")),
+  person(
+    given = "Tianjiao",
+    family = "Cao",
+    role = "aut"))
+Description: Learns the structure of a Bayesian network (a directed acyclic
+    graph) from continuous data with the dynamic programming search of
+    CausNet (Sharma and Millstein (2023) <doi:10.1186/s12859-023-05159-6>),
+    in which the parents of each variable are chosen from a screened set of
+    candidate parents. Candidate parents are screened either with Pearson
+    correlation tests or with stability selection (Meinshausen and Buhlmann
+    (2010; preprint <doi:10.48550/arXiv.0809.2932>)), where the number of
+    variables selected per subsample is derived from a per-node bound on the
+    per-family error rate (PFER): the expected number of falsely selected
+    candidate parents of each variable (node), each screened as its own
+    family of the other variables. Summed over the screened nodes, the
+    expected total number of falsely selected candidate parents (not edges
+    of the final network) is at most the number of screened nodes times
+    this bound. The search can be restricted to the neighbourhood of an
+    outcome variable (phenotype-driven search), and variables that cannot
+    be part of any edge are removed before the search.
+    Parent sets are scored with the Bayesian information criterion (BIC) of
+    linear regression models (default), the BGe score from 'bnlearn', or a
+    user-supplied score function.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
 Suggests: 
     igraph,
     testthat (>= 2.1.0),
@@ -29,7 +50,11 @@ BugReports: https://github.com/USCbiostats/causnet/issues
 Imports: 
     purrr,
     Rcpp,
-    bnlearn
+    bnlearn,
+    graphics,
+    stats,
+    utils
 VignetteBuilder: knitr
 LinkingTo: 
     Rcpp
+Config/roxygen2/version: 8.0.0

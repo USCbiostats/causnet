@@ -1,4 +1,8 @@
-test_that("swscore respects max_parents", {
+test_that("swscore() returns Inf without a parent set inside w, else the entry for pset", {
+ # pset = {1, 2, 3} has more than max_parents = 2 members, and no entry of
+ # pps[[1]] (4 and 5) lies inside it, so there is no parent set (score Inf).
+ # With tables built by the package this happens only for max_parents = 0; a
+ # sink with parent sets inside w gets the best one (see test-swscore.R).
  expect_equal(
    swscore(1,
            c(1, 2, 3),
@@ -9,6 +13,7 @@ test_that("swscore respects max_parents", {
    list(Inf, Inf)
  )
 
+ # pset has at most max_parents = 4 members: the entry equal to pset is used
  expect_equal(
    swscore(1,
            c(1, 2, 3),
@@ -20,7 +25,10 @@ test_that("swscore respects max_parents", {
  )
 })
 
-test_that("Makes sure wsink_scores removes cases that violate max_parents", {
+test_that("wsink_scores() returns no infinite scores", {
+  # One sink of this input has more than max_parents candidate parents in its
+  # set; swscore() gives it the best subset of them, so no row is dropped
+  # here. Rows with an infinite score would be dropped.
 
   ref <- list(w = c(2L, 3L, 5L),
               w_networkscore = -1281.63810094545,

@@ -10,7 +10,8 @@
 #' @param max_parents Numeric, maximal number of parents.
 #'
 #' @return List with two elements. First element is network data.frame with 3
-#'     elements; node.source, node.sink and component. And vector n_best_parents
+#'     elements; node.source, node.sink and component, with one row for every
+#'     parent in the best parent set of every sink. And vector n_best_parents
 #'     indicating number of best parents at each consideration.
 #' @noRd
 sink2net <- function(bnets, pp, pps, bps, max_parents) {
@@ -25,7 +26,7 @@ sink2net <- function(bnets, pp, pps, bps, max_parents) {
 
   for (c_index in seq_len(n_comp)) {
     indexes <- bnets$wscore == c_index
-    for (k in max(bnets$k[indexes]):2) {
+    for (k in seq_down_to_2(max(bnets$k[indexes]))) {
       bp_set <- NULL
       tmp <- which(indexes)[bnets$k[indexes] == k]
       if(length(tmp) == 0) break
@@ -39,12 +40,11 @@ sink2net <- function(bnets, pp, pps, bps, max_parents) {
       if (is.null(bp_set)) next
       if (any(is.infinite(bp_set))) next
 
-      src <- bp_set
-      n_conflicts <- c(n_conflicts, length(src))
-      # Sampling 1 best sink at random
-      src <- src[sample.int(length(src), 1)]
-      mynets[rowno, ] <- cbind(src, s, c_index)
-      rowno <- rowno + 1
+      n_conflicts <- c(n_conflicts, length(bp_set))
+      # every parent in the best parent set of sink s becomes an edge
+      new_rows <- rowno + seq_along(bp_set) - 1
+      mynets[new_rows, ] <- cbind(bp_set, s, c_index)
+      rowno <- rowno + length(bp_set)
     }
   }
 

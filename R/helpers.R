@@ -30,3 +30,10 @@ subsetur <- function(n, r) {
   }
   return(set)
 }
+
+# from, from - 1, ..., 2 for use as a descending loop index; empty when
+# from < 2 (`from:2` would count upwards, e.g. 1:2 is c(1, 2)).
+seq_down_to_2 <- function(from) {
+  if (from < 2) return(integer())
+  from:2
+}

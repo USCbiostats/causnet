@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // list_setequal
 LogicalVector list_setequal(List x, NumericVector y);
 RcppExport SEXP _causnet_list_setequal(SEXP xSEXP, SEXP ySEXP) {

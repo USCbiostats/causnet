@@ -24,6 +24,11 @@ find_best_network <- function(bsinks) {
     k <- max(bsinks$k)
 
     aa <- match(k, bsinks$k)
+    if (aa > attr(bsinks, "index")) {
+      stop("Internal error in find_best_network(): the largest `k` is in row ",
+           aa, ", beyond the ", attr(bsinks, "index"),
+           " valid rows of the sink list.", call. = FALSE)
+    }
 
     bestnets <- append_sink_list(bestnets,
                                  bsinks$windx[aa],
@@ -37,7 +42,7 @@ find_best_network <- function(bsinks) {
     wlen <- length(w1)
     if (wlen == 0) break
 
-    for (d in wlen:2) {
+    for (d in seq_down_to_2(wlen)) {
       aa <- which(purrr::map_lgl(bsinks$windx, ~ identical(.x, w1)))
 
       if(length(aa) == 0) break
@@ -48,13 +53,15 @@ find_best_network <- function(bsinks) {
                                    bsinks$sink[aa[1]],
                                    mycomp)
 
-      myw <- bsinks$windx[aa][[1]]
-      w1 <- myw[!is.element(myw, bsinks$sink[aa[1]])]
+      # `w_d` is the current set of the chain walk; `myw` must keep the
+      # largest set of the component for the removal step below.
+      w_d <- bsinks$windx[aa][[1]]
+      w1 <- w_d[!is.element(w_d, bsinks$sink[aa[1]])]
       if (length(w1) == 0) break
     }
 
     # remove all rows in bsinks with sets that have elements of the largest w
-    # in bestnets
+    # in bestnets (`myw`), so that no later component reuses its nodes
     remove_indexes <-
       which(!purrr::map_lgl(bsinks$windx, ~ sum(is.element(.x, myw)) == 0))
 

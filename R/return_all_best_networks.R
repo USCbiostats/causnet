@@ -1,8 +1,19 @@
-#' Return all best networks
+#' Return all best networks (deprecated)
 #'
-#' @param input Result from [caunset] function
+#' @description
+#' Deprecated: every call gives a warning; the returned value is unchanged.
+#' This function enumerates the networks that take one parent from the single
+#' best parent set of each sink; these are not genuinely tied best networks.
+#' \code{\link{causnet}} and \code{\link{causnet_stable}} now return every
+#' parent of each best parent set, so these networks are no longer
+#' alternative best networks.
 #'
-#' @return list of best networks
+#' @param input Result of \code{\link{causnet}} or
+#'   \code{\link{causnet_stable}}.
+#'
+#' @return A list of networks (data.frames with columns \code{node.source},
+#'   \code{node.sink} and \code{component}), one for each way of taking one
+#'   parent from the best parent set of each sink.
 #' @export
 #'
 #' @examples
@@ -10,8 +21,12 @@
 #' mydata <- simdat(n_var = 10)
 #' out <- causnet(data = mydata, max_parents = 3)
 #'
-#' return_all_best_networks(out)
+#' # deprecated: gives a warning (suppressed here)
+#' suppressWarnings(return_all_best_networks(out))
 return_all_best_networks <- function(input) {
+  .Deprecated(
+    msg = best_networks_deprecation_msg("return_all_best_networks")
+  )
 
   # Generate all paths
   x <- unname(t(expand.grid(lapply(input$n_best_parents, seq_len))))
@@ -21,12 +36,24 @@ return_all_best_networks <- function(input) {
   lapply(all_paths, best_networks_sink2net, input$mutliple_networks)
 }
 
-#' Return n random best networks
+#' Return n random best networks (deprecated)
 #'
-#' @param input Result from [caunset] function
-#' @param n numeric
+#' @description
+#' Deprecated: every call gives a warning; the returned value is unchanged.
+#' This function draws from the networks that take one parent from the single
+#' best parent set of each sink; these are not genuinely tied best networks.
+#' \code{\link{causnet}} and \code{\link{causnet_stable}} now return every
+#' parent of each best parent set, so these networks are no longer
+#' alternative best networks.
 #'
-#' @return list of best networks
+#' @param input Result of \code{\link{causnet}} or
+#'   \code{\link{causnet_stable}}.
+#' @param n Number of networks to return.
+#'
+#' @return A list of \code{n} of the networks returned by
+#'   \code{\link{return_all_best_networks}}, drawn at random without
+#'   replacement; all of them (and a printed note) if \code{n} is larger than
+#'   their number.
 #' @export
 #'
 #' @examples
@@ -34,8 +61,12 @@ return_all_best_networks <- function(input) {
 #' mydata <- simdat(n_var = 10)
 #' out <- causnet(data = mydata, max_parents = 3)
 #'
-#' return_random_best_networks(out, 1)
+#' # deprecated: gives a warning (suppressed here)
+#' suppressWarnings(return_random_best_networks(out, 1))
 return_random_best_networks <- function(input, n) {
+  .Deprecated(
+    msg = best_networks_deprecation_msg("return_random_best_networks")
+  )
 
   # Generate all paths
   x <- unname(t(expand.grid(lapply(input$n_best_parents, seq_len))))
@@ -48,6 +79,17 @@ return_random_best_networks <- function(input, n) {
   }
 
   lapply(all_paths, best_networks_sink2net, input$mutliple_networks)
+}
+
+# message of the deprecation warning of the two functions above
+best_networks_deprecation_msg <- function(fun) {
+  paste0(
+    fun, "() is deprecated. It enumerates networks that take one parent ",
+    "from the single best parent set of each sink; these are not genuinely ",
+    "tied best networks. causnet() and causnet_stable() now return every ",
+    "parent of each best parent set, so these networks are no longer ",
+    "alternative best networks."
+  )
 }
 
 best_networks_sink2net <- function(network_path, data) {
@@ -69,7 +111,7 @@ best_networks_sink2net <- function(network_path, data) {
 
   for (c_index in seq_len(n_comp)) {
     indexes <- bnets$wscore == c_index
-    for (k in max(bnets$k[indexes]):2) {
+    for (k in seq_down_to_2(max(bnets$k[indexes]))) {
       bp_set <- NULL
       tmp <- which(indexes)[bnets$k[indexes] == k]
       if(length(tmp) == 0) break
@@ -95,5 +137,9 @@ best_networks_sink2net <- function(network_path, data) {
     }
   }
 
+  # causnet() searches a reduced problem; `feas` maps its node indices back
+  # to the columns of the data
+  mynets$node.source <- as.numeric(data$feas[mynets$node.source])
+  mynets$node.sink <- as.numeric(data$feas[mynets$node.sink])
   mynets
 }

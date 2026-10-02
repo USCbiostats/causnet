@@ -7,6 +7,9 @@ create_sink_list <- function(windx, k, sink, wscore, m) {
   out$sink   = numeric(length_out)
   out$wscore = numeric(length_out)
   attr(out, "m") <- m
+  # initial preallocated size only: the vectors can grow past it (see
+  # clear_sink_list_tail()), so it is not a capacity bound; no package code
+  # reads it
   attr(out, "length") <- length_out
   attr(out, "index") <- length(k)
 
@@ -59,9 +62,7 @@ remove_duplicates <- function(sink_list) {
   sink_list$sink[seq_along(keeps)] <- sink_list$sink[keeps]
   sink_list$wscore[seq_along(keeps)] <- sink_list$wscore[keeps]
 
-  sink_list$k[seq(length(keeps) + 1, attr(sink_list, "length"))] <- 0
-  sink_list$sink[seq(length(keeps) + 1, attr(sink_list, "length"))] <- 0
-  sink_list$wscore[seq(length(keeps) + 1, attr(sink_list, "length"))] <- 0
+  sink_list <- clear_sink_list_tail(sink_list, length(keeps))
 
   attr(sink_list, "index") <- length(keeps)
   sink_list
@@ -75,11 +76,24 @@ set_sink_list <- function(sink_list, windx, k, sink, wscore) {
   sink_list$sink[seq_len(input_length)] <- sink
   sink_list$wscore[seq_len(input_length)] <- wscore
 
-  sink_list$k[seq(input_length + 1, attr(sink_list, "length"))] <- 0
-  sink_list$sink[seq(input_length + 1, attr(sink_list, "length"))] <- 0
-  sink_list$wscore[seq(input_length + 1, attr(sink_list, "length"))] <- 0
+  sink_list <- clear_sink_list_tail(sink_list, input_length)
 
   attr(sink_list, "index") <- input_length
+  sink_list
+}
+
+# Zero k / sink / wscore after the first n (valid) rows.
+#
+# The vectors are preallocated to attr(, "length") = m^4 rows, but
+# append_sink_list() writes by position and silently grows them past that.
+# The tail must therefore be cleared up to the vectors' true length, never up
+# to attr(, "length"): seq(n + 1, attr(, "length")) leaves stale rows beyond
+# m^4 and, once n >= m^4, counts downwards and zeroes valid rows. When no row
+# was ever written past m^4 the cleared range is the same as before.
+clear_sink_list_tail <- function(sink_list, n) {
+  sink_list$k[n + seq_len(max(0, length(sink_list$k) - n))] <- 0
+  sink_list$sink[n + seq_len(max(0, length(sink_list$sink) - n))] <- 0
+  sink_list$wscore[n + seq_len(max(0, length(sink_list$wscore) - n))] <- 0
   sink_list
 }
 

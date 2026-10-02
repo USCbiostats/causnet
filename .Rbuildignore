@@ -8,3 +8,7 @@
 ^\.github/workflows/R-CMD-check\.yaml$
 ^\.github/workflows/pr-commands\.yaml$
 ^\.github$
+^\.positai$
+^\.claude$
+^dev$
+^CHANGES_DETAILED\.md$

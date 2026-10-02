@@ -2,6 +2,8 @@
 
 S3method(print,causnet)
 export(causnet)
+export(causnet_stable)
+export(find_possible_parents_stable)
 export(list_setequal)
 export(netplot_jm)
 export(return_all_best_networks)

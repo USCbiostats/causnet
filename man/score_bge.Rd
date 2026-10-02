@@ -7,15 +7,26 @@
 score_bge(y, x, mydat)
 }
 \arguments{
-\item{y}{y}
+\item{y}{Integer, column index of the node.}
 
-\item{x}{x}
+\item{x}{Integer vector, column indices of the parents, or \code{NA} for no
+parents.}
 
-\item{mydat}{data}
+\item{mydat}{A data.frame of numeric variables.}
 }
 \value{
 numeric score
 }
 \description{
-BGE scoring function
+Local BGe score of node \code{y} given the parent set \code{x}, for use as
+\code{score_fun} in \code{\link{causnet}}. Bigger is better.
+}
+\details{
+The local score is \eqn{\log p(D_{\{y\} \cup x}) - \log p(D_x)}, the
+difference between the BGe log marginal likelihoods of the columns
+\code{c(y, x)} and of the columns \code{x}, both computed with
+\code{\link[bnlearn]{score}} (\code{type = "bge"}, bnlearn's default
+priors). With no parents (\code{x = NA}) it is the BGe score of \code{y}
+alone. Summed over all nodes of a DAG it equals
+\code{bnlearn::score(dag, mydat, type = "bge")}.
 }

@@ -2,23 +2,32 @@
 % Please edit documentation in R/return_all_best_networks.R
 \name{return_all_best_networks}
 \alias{return_all_best_networks}
-\title{Return all best networks}
+\title{Return all best networks (deprecated)}
 \usage{
 return_all_best_networks(input)
 }
 \arguments{
-\item{input}{Result from [caunset] function}
+\item{input}{Result of \code{\link{causnet}} or
+\code{\link{causnet_stable}}.}
 }
 \value{
-list of best networks
+A list of networks (data.frames with columns \code{node.source},
+  \code{node.sink} and \code{component}), one for each way of taking one
+  parent from the best parent set of each sink.
 }
 \description{
-Return all best networks
+Deprecated: every call gives a warning; the returned value is unchanged.
+This function enumerates the networks that take one parent from the single
+best parent set of each sink; these are not genuinely tied best networks.
+\code{\link{causnet}} and \code{\link{causnet_stable}} now return every
+parent of each best parent set, so these networks are no longer
+alternative best networks.
 }
 \examples{
 set.seed(1234)
 mydata <- simdat(n_var = 10)
 out <- causnet(data = mydata, max_parents = 3)
 
-return_all_best_networks(out)
+# deprecated: gives a warning (suppressed here)
+suppressWarnings(return_all_best_networks(out))
 }

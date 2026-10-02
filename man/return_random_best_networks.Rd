@@ -2,25 +2,35 @@
 % Please edit documentation in R/return_all_best_networks.R
 \name{return_random_best_networks}
 \alias{return_random_best_networks}
-\title{Return n random best networks}
+\title{Return n random best networks (deprecated)}
 \usage{
 return_random_best_networks(input, n)
 }
 \arguments{
-\item{input}{Result from [caunset] function}
+\item{input}{Result of \code{\link{causnet}} or
+\code{\link{causnet_stable}}.}
 
-\item{n}{numeric}
+\item{n}{Number of networks to return.}
 }
 \value{
-list of best networks
+A list of \code{n} of the networks returned by
+  \code{\link{return_all_best_networks}}, drawn at random without
+  replacement; all of them (and a printed note) if \code{n} is larger than
+  their number.
 }
 \description{
-Return n random best networks
+Deprecated: every call gives a warning; the returned value is unchanged.
+This function draws from the networks that take one parent from the single
+best parent set of each sink; these are not genuinely tied best networks.
+\code{\link{causnet}} and \code{\link{causnet_stable}} now return every
+parent of each best parent set, so these networks are no longer
+alternative best networks.
 }
 \examples{
 set.seed(1234)
 mydata <- simdat(n_var = 10)
 out <- causnet(data = mydata, max_parents = 3)
 
-return_random_best_networks(out, 1)
+# deprecated: gives a warning (suppressed here)
+suppressWarnings(return_random_best_networks(out, 1))
 }
